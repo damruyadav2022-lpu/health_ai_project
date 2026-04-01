@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    container_name: healthai_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=change-in-production
+      - DATABASE_URL=sqlite:///./healthai.db
+      - ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+    volumes:
+      - ./backend/ml/models:/app/ml/models
+      - ./backend/healthai.db:/app/healthai.db
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: healthai_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  default:
+    name: healthai_network

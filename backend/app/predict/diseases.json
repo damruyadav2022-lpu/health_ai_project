@@ -1,0 +1,2263 @@
+[
+  {
+    "disease": "Diabetes Mellitus",
+    "parameters": [
+      "FBS",
+      "PPBS",
+      "HbA1c",
+      "BMI"
+    ],
+    "symptoms": [
+      "frequent urination",
+      "thirst",
+      "fatigue"
+    ],
+    "risk": {
+      "low": "<5.7",
+      "medium": "5.7-6.4",
+      "high": ">=6.5"
+    },
+    "specialist": "Endocrinologist",
+    "category": "Metabolic"
+  },
+  {
+    "disease": "Hypertension",
+    "parameters": [
+      "systolic BP",
+      "diastolic BP"
+    ],
+    "symptoms": [
+      "headache",
+      "dizziness"
+    ],
+    "risk": {
+      "low": "<120/80",
+      "medium": "120-139",
+      "high": ">=140"
+    },
+    "specialist": "Cardiologist",
+    "category": "Cardiovascular"
+  },
+  {
+    "disease": "Asthma",
+    "parameters": [
+      "FEV1",
+      "SpO2"
+    ],
+    "symptoms": [
+      "wheezing",
+      "shortness of breath"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Pulmonologist",
+    "category": "Respiratory"
+  },
+  {
+    "disease": "Dengue",
+    "parameters": [
+      "platelet",
+      "temperature"
+    ],
+    "symptoms": [
+      "fever",
+      "joint pain",
+      "rash"
+    ],
+    "risk": {
+      "low": ">100k",
+      "medium": "50-100k",
+      "high": "<50k"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Malaria",
+    "parameters": [
+      "parasite test",
+      "temperature"
+    ],
+    "symptoms": [
+      "fever",
+      "chills"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Tuberculosis",
+    "parameters": [
+      "sputum test",
+      "x-ray"
+    ],
+    "symptoms": [
+      "cough",
+      "weight loss"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "active",
+      "high": "advanced"
+    },
+    "specialist": "Pulmonologist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Anemia",
+    "parameters": [
+      "hemoglobin"
+    ],
+    "symptoms": [
+      "fatigue",
+      "pale skin"
+    ],
+    "risk": {
+      "low": ">10",
+      "medium": "7-10",
+      "high": "<7"
+    },
+    "specialist": "Hematologist",
+    "category": "Blood"
+  },
+  {
+    "disease": "COVID-19",
+    "parameters": [
+      "PCR",
+      "SpO2"
+    ],
+    "symptoms": [
+      "fever",
+      "cough",
+      "loss of smell"
+    ],
+    "risk": {
+      "low": ">94",
+      "medium": "90-94",
+      "high": "<90"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Heart Attack",
+    "parameters": [
+      "ECG",
+      "troponin"
+    ],
+    "symptoms": [
+      "chest pain",
+      "sweating"
+    ],
+    "risk": {
+      "low": "normal",
+      "medium": "risk",
+      "high": "critical"
+    },
+    "specialist": "Cardiologist",
+    "category": "Cardiovascular"
+  },
+  {
+    "disease": "Stroke",
+    "parameters": [
+      "CT scan",
+      "BP"
+    ],
+    "symptoms": [
+      "weakness",
+      "speech loss"
+    ],
+    "risk": {
+      "low": "minor",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Neurologist",
+    "category": "Neurological"
+  },
+  {
+    "disease": "Depression",
+    "parameters": [
+      "PHQ-9"
+    ],
+    "symptoms": [
+      "sadness",
+      "low energy"
+    ],
+    "risk": {
+      "low": "<10",
+      "medium": "10-19",
+      "high": ">=20"
+    },
+    "specialist": "Psychiatrist",
+    "category": "Mental Health"
+  },
+  {
+    "disease": "Anxiety",
+    "parameters": [
+      "GAD-7"
+    ],
+    "symptoms": [
+      "nervousness",
+      "restlessness"
+    ],
+    "risk": {
+      "low": "<5",
+      "medium": "5-15",
+      "high": ">15"
+    },
+    "specialist": "Psychiatrist",
+    "category": "Mental Health"
+  },
+  {
+    "disease": "Cancer (General)",
+    "parameters": [
+      "biopsy",
+      "tumor size"
+    ],
+    "symptoms": [
+      "weight loss",
+      "fatigue"
+    ],
+    "risk": {
+      "low": "stage1",
+      "medium": "stage2-3",
+      "high": "stage4"
+    },
+    "specialist": "Oncologist",
+    "category": "Oncology"
+  },
+  {
+    "disease": "Pneumonia",
+    "parameters": [
+      "x-ray",
+      "WBC"
+    ],
+    "symptoms": [
+      "cough",
+      "fever"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Pulmonologist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Bronchitis",
+    "parameters": [
+      "spirometry"
+    ],
+    "symptoms": [
+      "cough",
+      "mucus"
+    ],
+    "risk": {
+      "low": "acute",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Pulmonologist",
+    "category": "Respiratory"
+  },
+  {
+    "disease": "Cholera",
+    "parameters": [
+      "stool test"
+    ],
+    "symptoms": [
+      "diarrhea",
+      "dehydration"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Typhoid",
+    "parameters": [
+      "Widal test"
+    ],
+    "symptoms": [
+      "fever",
+      "weakness"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Hepatitis B",
+    "parameters": [
+      "HBsAg"
+    ],
+    "symptoms": [
+      "jaundice",
+      "fatigue"
+    ],
+    "risk": {
+      "low": "inactive",
+      "medium": "active",
+      "high": "chronic"
+    },
+    "specialist": "Hepatologist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Kidney Disease",
+    "parameters": [
+      "creatinine",
+      "GFR"
+    ],
+    "symptoms": [
+      "swelling",
+      "fatigue"
+    ],
+    "risk": {
+      "low": "stage1",
+      "medium": "stage2-3",
+      "high": "stage4-5"
+    },
+    "specialist": "Nephrologist",
+    "category": "Renal"
+  },
+  {
+    "disease": "Liver Cirrhosis",
+    "parameters": [
+      "LFT"
+    ],
+    "symptoms": [
+      "jaundice",
+      "ascites"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "Gastroenterology"
+    },
+    "specialist": "Hepatologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Measles",
+    "parameters": [
+      "IgM",
+      "temperature"
+    ],
+    "symptoms": [
+      "rash",
+      "fever",
+      "cough"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "complications"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Mumps",
+    "parameters": [
+      "IgM",
+      "amylase"
+    ],
+    "symptoms": [
+      "swollen glands",
+      "fever"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "orchitis"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Rubella",
+    "parameters": [
+      "IgM"
+    ],
+    "symptoms": [
+      "rash",
+      "fever"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "pregnancy"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Chickenpox",
+    "parameters": [
+      "clinical"
+    ],
+    "symptoms": [
+      "rash",
+      "fever",
+      "itching"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Rabies",
+    "parameters": [
+      "exposure history"
+    ],
+    "symptoms": [
+      "hydrophobia",
+      "agitation"
+    ],
+    "risk": {
+      "low": "none",
+      "medium": "suspected",
+      "high": "fatal"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Tetanus",
+    "parameters": [
+      "clinical"
+    ],
+    "symptoms": [
+      "muscle stiffness",
+      "spasms"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Polio",
+    "parameters": [
+      "PCR"
+    ],
+    "symptoms": [
+      "paralysis",
+      "weakness"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "permanent"
+    },
+    "specialist": "Neurologist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Influenza",
+    "parameters": [
+      "PCR"
+    ],
+    "symptoms": [
+      "fever",
+      "cough",
+      "body ache"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Sinusitis",
+    "parameters": [
+      "CT"
+    ],
+    "symptoms": [
+      "facial pain",
+      "congestion"
+    ],
+    "risk": {
+      "low": "acute",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "ENT Specialist",
+    "category": "Respiratory"
+  },
+  {
+    "disease": "Otitis Media",
+    "parameters": [
+      "ear exam"
+    ],
+    "symptoms": [
+      "ear pain",
+      "hearing loss"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "ENT Specialist",
+    "category": "ENT"
+  },
+  {
+    "disease": "Glaucoma",
+    "parameters": [
+      "IOP",
+      "visual field"
+    ],
+    "symptoms": [
+      "vision loss"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "blindness"
+    },
+    "specialist": "Ophthalmologist",
+    "category": "Eye"
+  },
+  {
+    "disease": "Cataract",
+    "parameters": [
+      "eye exam"
+    ],
+    "symptoms": [
+      "blurred vision"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "blindness"
+    },
+    "specialist": "Ophthalmologist",
+    "category": "Eye"
+  },
+  {
+    "disease": "Conjunctivitis",
+    "parameters": [
+      "eye exam"
+    ],
+    "symptoms": [
+      "red eye",
+      "itching"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Ophthalmologist",
+    "category": "Eye"
+  },
+  {
+    "disease": "Macular Degeneration",
+    "parameters": [
+      "OCT"
+    ],
+    "symptoms": [
+      "vision distortion"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "blindness"
+    },
+    "specialist": "Ophthalmologist",
+    "category": "Eye"
+  },
+  {
+    "disease": "Gout",
+    "parameters": [
+      "uric acid"
+    ],
+    "symptoms": [
+      "joint pain",
+      "swelling"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Rheumatologist",
+    "category": "Musculoskeletal"
+  },
+  {
+    "disease": "Rheumatoid Arthritis",
+    "parameters": [
+      "RF",
+      "CRP"
+    ],
+    "symptoms": [
+      "joint pain",
+      "stiffness"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "deformity"
+    },
+    "specialist": "Rheumatologist",
+    "category": "Musculoskeletal"
+  },
+  {
+    "disease": "Lupus",
+    "parameters": [
+      "ANA",
+      "anti-dsDNA"
+    ],
+    "symptoms": [
+      "rash",
+      "fatigue"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "organ damage"
+    },
+    "specialist": "Rheumatologist",
+    "category": "Autoimmune"
+  },
+  {
+    "disease": "Celiac Disease",
+    "parameters": [
+      "tTG"
+    ],
+    "symptoms": [
+      "diarrhea",
+      "bloating"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "malnutrition"
+    },
+    "specialist": "Gastroenterologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "IBS",
+    "parameters": [
+      "clinical"
+    ],
+    "symptoms": [
+      "abdominal pain",
+      "bloating"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Gastroenterologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Crohn Disease",
+    "parameters": [
+      "colonoscopy"
+    ],
+    "symptoms": [
+      "diarrhea",
+      "weight loss"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Gastroenterologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Hemophilia",
+    "parameters": [
+      "clotting factor"
+    ],
+    "symptoms": [
+      "bleeding"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Hematologist",
+    "category": "Blood"
+  },
+  {
+    "disease": "Deep Vein Thrombosis",
+    "parameters": [
+      "D-dimer",
+      "ultrasound"
+    ],
+    "symptoms": [
+      "leg pain",
+      "swelling"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "embolism"
+    },
+    "specialist": "Vascular Surgeon",
+    "category": "Cardiovascular"
+  },
+  {
+    "disease": "Pulmonary Embolism",
+    "parameters": [
+      "CT",
+      "D-dimer"
+    ],
+    "symptoms": [
+      "chest pain",
+      "breathlessness"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Pulmonologist",
+    "category": "Cardiovascular"
+  },
+  {
+    "disease": "Sleep Apnea",
+    "parameters": [
+      "sleep study"
+    ],
+    "symptoms": [
+      "snoring",
+      "fatigue"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Sleep Specialist",
+    "category": "Respiratory"
+  },
+  {
+    "disease": "Insomnia",
+    "parameters": [
+      "sleep history"
+    ],
+    "symptoms": [
+      "difficulty sleeping"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Psychiatrist",
+    "category": "Mental Health"
+  },
+  {
+    "disease": "Autism",
+    "parameters": [
+      "behavioral"
+    ],
+    "symptoms": [
+      "social difficulty"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Behavioral Specialist",
+    "category": "Developmental"
+  },
+  {
+    "disease": "ADHD",
+    "parameters": [
+      "behavioral"
+    ],
+    "symptoms": [
+      "hyperactivity",
+      "inattention"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Psychiatrist",
+    "category": "Mental Health"
+  },
+  {
+    "disease": "Endometriosis",
+    "parameters": [
+      "laparoscopy"
+    ],
+    "symptoms": [
+      "pelvic pain"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "infertility"
+    },
+    "specialist": "Gynecologist",
+    "category": "Gynaecology"
+  },
+  {
+    "disease": "PCOS",
+    "parameters": [
+      "USG",
+      "hormones"
+    ],
+    "symptoms": [
+      "irregular periods",
+      "weight gain"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "infertility"
+    },
+    "specialist": "Endocrinologist",
+    "category": "Gynaecology"
+  },
+  {
+    "disease": "Erectile Dysfunction",
+    "parameters": [
+      "hormone test"
+    ],
+    "symptoms": [
+      "erection issues"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Urologist",
+    "category": "Urology"
+  },
+  {
+    "disease": "Prostatitis",
+    "parameters": [
+      "urine test"
+    ],
+    "symptoms": [
+      "pain",
+      "urination issues"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Urologist",
+    "category": "Urology"
+  },
+  {
+    "disease": "Food Poisoning",
+    "parameters": [
+      "stool test"
+    ],
+    "symptoms": [
+      "vomiting",
+      "diarrhea"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "dehydration"
+    },
+    "specialist": "General Physician",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Allergic Rhinitis",
+    "parameters": [
+      "IgE"
+    ],
+    "symptoms": [
+      "sneezing",
+      "runny nose"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Allergist",
+    "category": "Immunology"
+  },
+  {
+    "disease": "Anaphylaxis",
+    "parameters": [
+      "clinical"
+    ],
+    "symptoms": [
+      "swelling",
+      "shock"
+    ],
+    "risk": {
+      "low": "none",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Emergency Physician",
+    "category": "Immunology"
+  },
+  {
+    "disease": "Burn Injury",
+    "parameters": [
+      "burn depth"
+    ],
+    "symptoms": [
+      "pain",
+      "blisters"
+    ],
+    "risk": {
+      "low": "1st degree",
+      "medium": "2nd",
+      "high": "3rd"
+    },
+    "specialist": "Burn Specialist",
+    "category": "Dermatology"
+  },
+  {
+    "disease": "Fracture",
+    "parameters": [
+      "X-ray"
+    ],
+    "symptoms": [
+      "pain",
+      "swelling"
+    ],
+    "risk": {
+      "low": "simple",
+      "medium": "moderate",
+      "high": "compound"
+    },
+    "specialist": "Orthopaedic Surgeon",
+    "category": "Musculoskeletal"
+  },
+  {
+    "disease": "Sepsis",
+    "parameters": [
+      "lactate",
+      "WBC"
+    ],
+    "symptoms": [
+      "fever",
+      "confusion"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "shock"
+    },
+    "specialist": "Emergency Physician",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Shock",
+    "parameters": [
+      "BP",
+      "lactate"
+    ],
+    "symptoms": [
+      "low BP",
+      "confusion"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "ICU Specialist",
+    "category": "Critical Care"
+  },
+  {
+    "disease": "Dehydration",
+    "parameters": [
+      "electrolytes"
+    ],
+    "symptoms": [
+      "thirst",
+      "weakness"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "General Physician",
+    "category": "General"
+  },
+  {
+    "disease": "Electrolyte Imbalance",
+    "parameters": [
+      "Na",
+      "K"
+    ],
+    "symptoms": [
+      "weakness",
+      "confusion"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "General Physician",
+    "category": "Renal"
+  },
+  {
+    "disease": "Scabies",
+    "parameters": [
+      "skin scraping"
+    ],
+    "symptoms": [
+      "itching",
+      "rash"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Dermatologist",
+    "category": "Dermatology"
+  },
+  {
+    "disease": "Ringworm",
+    "parameters": [
+      "fungal test"
+    ],
+    "symptoms": [
+      "itching",
+      "patches"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Dermatologist",
+    "category": "Skin"
+  },
+  {
+    "disease": "Ebola Virus Disease",
+    "parameters": [
+      "PCR",
+      "viral load",
+      "platelet"
+    ],
+    "symptoms": [
+      "fever",
+      "bleeding",
+      "vomiting"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "systemic",
+      "high": "fatal"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Marburg Virus Disease",
+    "parameters": [
+      "PCR",
+      "viral load"
+    ],
+    "symptoms": [
+      "fever",
+      "bleeding"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Lassa Fever",
+    "parameters": [
+      "PCR",
+      "LFT"
+    ],
+    "symptoms": [
+      "fever",
+      "weakness",
+      "bleeding"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Yellow Fever",
+    "parameters": [
+      "PCR",
+      "bilirubin"
+    ],
+    "symptoms": [
+      "fever",
+      "jaundice",
+      "bleeding"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Rabies Encephalitis",
+    "parameters": [
+      "history",
+      "PCR"
+    ],
+    "symptoms": [
+      "hydrophobia",
+      "confusion"
+    ],
+    "risk": {
+      "low": "none",
+      "medium": "early",
+      "high": "fatal"
+    },
+    "specialist": "Neurologist",
+    "category": "Neurological"
+  },
+  {
+    "disease": "Creutzfeldt-Jakob Disease",
+    "parameters": [
+      "EEG",
+      "MRI",
+      "CSF"
+    ],
+    "symptoms": [
+      "memory loss",
+      "rapid decline"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Neurologist",
+    "category": "Neurological"
+  },
+  {
+    "disease": "Amyotrophic Lateral Sclerosis",
+    "parameters": [
+      "EMG",
+      "MRI"
+    ],
+    "symptoms": [
+      "muscle weakness",
+      "paralysis"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "progressive",
+      "high": "fatal"
+    },
+    "specialist": "Neurologist",
+    "category": "Neurological"
+  },
+  {
+    "disease": "Pancreatic Cancer",
+    "parameters": [
+      "CT",
+      "CA19-9"
+    ],
+    "symptoms": [
+      "weight loss",
+      "jaundice"
+    ],
+    "risk": {
+      "low": "stage1",
+      "medium": "stage2-3",
+      "high": "stage4"
+    },
+    "specialist": "Oncologist",
+    "category": "Oncology"
+  },
+  {
+    "disease": "Glioblastoma",
+    "parameters": [
+      "MRI",
+      "biopsy"
+    ],
+    "symptoms": [
+      "headache",
+      "seizures"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Neurologist",
+    "category": "Oncology"
+  },
+  {
+    "disease": "Melanoma",
+    "parameters": [
+      "biopsy"
+    ],
+    "symptoms": [
+      "skin lesion",
+      "color change"
+    ],
+    "risk": {
+      "low": "stage1",
+      "medium": "stage2",
+      "high": "fatal"
+    },
+    "specialist": "Dermatologist",
+    "category": "Dermatology"
+  },
+  {
+    "disease": "Severe Acute Respiratory Syndrome",
+    "parameters": [
+      "PCR",
+      "SpO2"
+    ],
+    "symptoms": [
+      "fever",
+      "breathlessness"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Pulmonologist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Middle East Respiratory Syndrome",
+    "parameters": [
+      "PCR",
+      "SpO2"
+    ],
+    "symptoms": [
+      "cough",
+      "fever"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Avian Influenza (H5N1)",
+    "parameters": [
+      "PCR",
+      "SpO2"
+    ],
+    "symptoms": [
+      "fever",
+      "respiratory distress"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Necrotizing Fasciitis",
+    "parameters": [
+      "CRP",
+      "WBC",
+      "imaging"
+    ],
+    "symptoms": [
+      "severe pain",
+      "skin necrosis"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "rapid",
+      "high": "fatal"
+    },
+    "specialist": "Surgeon",
+    "category": "Dermatology"
+  },
+  {
+    "disease": "Toxic Shock Syndrome",
+    "parameters": [
+      "BP",
+      "culture"
+    ],
+    "symptoms": [
+      "fever",
+      "rash",
+      "shock"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Acute Respiratory Distress Syndrome",
+    "parameters": [
+      "PaO2",
+      "X-ray"
+    ],
+    "symptoms": [
+      "severe breathlessness"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Pulmonologist",
+    "category": "Respiratory"
+  },
+  {
+    "disease": "Multi Organ Failure",
+    "parameters": [
+      "LFT",
+      "KFT",
+      "BP"
+    ],
+    "symptoms": [
+      "organ dysfunction"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "ICU Specialist",
+    "category": "Critical Care"
+  },
+  {
+    "disease": "Meningococcal Meningitis",
+    "parameters": [
+      "CSF",
+      "culture"
+    ],
+    "symptoms": [
+      "fever",
+      "neck stiffness"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Neurologist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Acute Leukemia",
+    "parameters": [
+      "CBC",
+      "bone marrow"
+    ],
+    "symptoms": [
+      "fatigue",
+      "bleeding"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Hematologist",
+    "category": "Oncology"
+  },
+  {
+    "disease": "Systemic Lupus Erythematosus (Severe)",
+    "parameters": [
+      "ANA",
+      "anti-dsDNA",
+      "CRP"
+    ],
+    "symptoms": [
+      "rash",
+      "organ damage"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Rheumatologist",
+    "category": "Autoimmune"
+  },
+  {
+    "disease": "Brucellosis",
+    "parameters": [
+      "blood culture",
+      "serology"
+    ],
+    "symptoms": [
+      "fever",
+      "sweating"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Leptospirosis",
+    "parameters": [
+      "IgM",
+      "PCR"
+    ],
+    "symptoms": [
+      "fever",
+      "muscle pain"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "organ failure"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Plague",
+    "parameters": [
+      "culture",
+      "PCR"
+    ],
+    "symptoms": [
+      "fever",
+      "lymph swelling"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Q Fever",
+    "parameters": [
+      "serology"
+    ],
+    "symptoms": [
+      "fever",
+      "fatigue"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Tularemia",
+    "parameters": [
+      "PCR",
+      "culture"
+    ],
+    "symptoms": [
+      "ulcer",
+      "fever"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Rocky Mountain Spotted Fever",
+    "parameters": [
+      "serology"
+    ],
+    "symptoms": [
+      "rash",
+      "fever"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Lyme Disease",
+    "parameters": [
+      "ELISA",
+      "Western blot"
+    ],
+    "symptoms": [
+      "rash",
+      "joint pain"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Chikungunya",
+    "parameters": [
+      "PCR"
+    ],
+    "symptoms": [
+      "fever",
+      "joint pain"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic pain"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Zika Virus",
+    "parameters": [
+      "PCR"
+    ],
+    "symptoms": [
+      "rash",
+      "fever"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "birth defects"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "West Nile Virus",
+    "parameters": [
+      "PCR",
+      "IgM"
+    ],
+    "symptoms": [
+      "fever",
+      "headache"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "neuroinvasive"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Japanese Encephalitis",
+    "parameters": [
+      "CSF",
+      "PCR"
+    ],
+    "symptoms": [
+      "fever",
+      "seizures"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Neurologist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Hantavirus",
+    "parameters": [
+      "PCR"
+    ],
+    "symptoms": [
+      "fever",
+      "respiratory distress"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "Pulmonologist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Norovirus Infection",
+    "parameters": [
+      "stool PCR"
+    ],
+    "symptoms": [
+      "vomiting",
+      "diarrhea"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "dehydration"
+    },
+    "specialist": "Gastroenterologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Rotavirus",
+    "parameters": [
+      "stool antigen"
+    ],
+    "symptoms": [
+      "diarrhea",
+      "fever"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "dehydration"
+    },
+    "specialist": "Gastroenterologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Giardiasis",
+    "parameters": [
+      "stool exam"
+    ],
+    "symptoms": [
+      "diarrhea",
+      "bloating"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Gastroenterologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Amoebiasis",
+    "parameters": [
+      "stool test"
+    ],
+    "symptoms": [
+      "diarrhea",
+      "pain"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "liver abscess"
+    },
+    "specialist": "Gastroenterologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Ascariasis",
+    "parameters": [
+      "stool exam"
+    ],
+    "symptoms": [
+      "abdominal pain"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "obstruction"
+    },
+    "specialist": "Gastroenterologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Hookworm Infection",
+    "parameters": [
+      "stool exam"
+    ],
+    "symptoms": [
+      "anemia",
+      "fatigue"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe anemia"
+    },
+    "specialist": "Hematologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Tapeworm Infection",
+    "parameters": [
+      "stool exam"
+    ],
+    "symptoms": [
+      "weight loss"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "cystic"
+    },
+    "specialist": "Gastroenterologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Filariasis",
+    "parameters": [
+      "blood smear"
+    ],
+    "symptoms": [
+      "swelling",
+      "fever"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "elephantiasis"
+    },
+    "specialist": "Tropical Medicine Specialist",
+    "category": "Infectious"
+  },
+  {
+    "disease": "Onchocerciasis",
+    "parameters": [
+      "skin biopsy"
+    ],
+    "symptoms": [
+      "itching",
+      "vision loss"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "blindness"
+    },
+    "specialist": "Ophthalmologist",
+    "category": "Tropical Medicine"
+  },
+  {
+    "disease": "Schistosomiasis",
+    "parameters": [
+      "stool exam"
+    ],
+    "symptoms": [
+      "blood urine"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "organ damage"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Tropical Medicine"
+  },
+  {
+    "disease": "Toxoplasmosis",
+    "parameters": [
+      "IgG",
+      "IgM"
+    ],
+    "symptoms": [
+      "fever",
+      "fatigue"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "brain damage"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Parasitology"
+  },
+  {
+    "disease": "Candidiasis",
+    "parameters": [
+      "culture"
+    ],
+    "symptoms": [
+      "itching",
+      "discharge"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "systemic"
+    },
+    "specialist": "Infectious Disease Specialist",
+    "category": "Fungal"
+  },
+  {
+    "disease": "Aspergillosis",
+    "parameters": [
+      "CT",
+      "culture"
+    ],
+    "symptoms": [
+      "cough",
+      "fever"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "invasive"
+    },
+    "specialist": "Pulmonologist",
+    "category": "Fungal"
+  },
+  {
+    "disease": "Histoplasmosis",
+    "parameters": [
+      "antigen test"
+    ],
+    "symptoms": [
+      "fever",
+      "cough"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "disseminated"
+    },
+    "specialist": "Pulmonologist",
+    "category": "Fungal"
+  },
+  {
+    "disease": "Cryptococcosis",
+    "parameters": [
+      "CSF",
+      "antigen"
+    ],
+    "symptoms": [
+      "headache",
+      "fever"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "meningitis"
+    },
+    "specialist": "Neurologist",
+    "category": "Fungal"
+  },
+  {
+    "disease": "Mucormycosis",
+    "parameters": [
+      "biopsy",
+      "MRI"
+    ],
+    "symptoms": [
+      "facial pain",
+      "necrosis"
+    ],
+    "risk": {
+      "low": "early",
+      "medium": "moderate",
+      "high": "fatal"
+    },
+    "specialist": "ENT Specialist",
+    "category": "Fungal"
+  },
+  {
+    "disease": "Scoliosis",
+    "parameters": [
+      "X-ray"
+    ],
+    "symptoms": [
+      "spine curvature"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Orthopaedic Surgeon",
+    "category": "Musculoskeletal"
+  },
+  {
+    "disease": "Kyphosis",
+    "parameters": [
+      "X-ray"
+    ],
+    "symptoms": [
+      "hunchback"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Orthopaedic Surgeon",
+    "category": "Musculoskeletal"
+  },
+  {
+    "disease": "Herniated Disc",
+    "parameters": [
+      "MRI"
+    ],
+    "symptoms": [
+      "back pain",
+      "numbness"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Orthopaedic Surgeon",
+    "category": "Musculoskeletal"
+  },
+  {
+    "disease": "Sciatica",
+    "parameters": [
+      "MRI"
+    ],
+    "symptoms": [
+      "leg pain"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Orthopaedic Surgeon",
+    "category": "Musculoskeletal"
+  },
+  {
+    "disease": "Fibromyalgia",
+    "parameters": [
+      "clinical"
+    ],
+    "symptoms": [
+      "pain",
+      "fatigue"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Rheumatologist",
+    "category": "Musculoskeletal"
+  },
+  {
+    "disease": "Carpal Tunnel Syndrome",
+    "parameters": [
+      "nerve conduction"
+    ],
+    "symptoms": [
+      "hand numbness"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Orthopaedic Surgeon",
+    "category": "Musculoskeletal"
+  },
+  {
+    "disease": "Tennis Elbow",
+    "parameters": [
+      "clinical"
+    ],
+    "symptoms": [
+      "elbow pain"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Orthopaedic Surgeon",
+    "category": "Musculoskeletal"
+  },
+  {
+    "disease": "Varicose Veins",
+    "parameters": [
+      "ultrasound"
+    ],
+    "symptoms": [
+      "swelling",
+      "pain"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "ulcers"
+    },
+    "specialist": "Vascular Surgeon",
+    "category": "Vascular"
+  },
+  {
+    "disease": "Hemorrhoids",
+    "parameters": [
+      "clinical"
+    ],
+    "symptoms": [
+      "bleeding",
+      "pain"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Proctologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Anal Fissure",
+    "parameters": [
+      "clinical"
+    ],
+    "symptoms": [
+      "pain",
+      "bleeding"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "chronic"
+    },
+    "specialist": "Proctologist",
+    "category": "Gastroenterology"
+  },
+  {
+    "disease": "Gallbladder Cancer",
+    "parameters": [
+      "CT",
+      "biopsy"
+    ],
+    "symptoms": [
+      "pain",
+      "jaundice"
+    ],
+    "risk": {
+      "low": "stage1",
+      "medium": "stage2",
+      "high": "stage4"
+    },
+    "specialist": "Oncologist",
+    "category": "Oncology"
+  },
+  {
+    "disease": "Esophageal Cancer",
+    "parameters": [
+      "endoscopy",
+      "biopsy"
+    ],
+    "symptoms": [
+      "difficulty swallowing"
+    ],
+    "risk": {
+      "low": "stage1",
+      "medium": "stage2",
+      "high": "stage4"
+    },
+    "specialist": "Oncologist",
+    "category": "Oncology"
+  },
+  {
+    "disease": "Stomach Cancer",
+    "parameters": [
+      "endoscopy",
+      "biopsy"
+    ],
+    "symptoms": [
+      "weight loss",
+      "pain"
+    ],
+    "risk": {
+      "low": "stage1",
+      "medium": "stage2",
+      "high": "stage4"
+    },
+    "specialist": "Oncologist",
+    "category": "Oncology"
+  },
+  {
+    "disease": "Colon Cancer",
+    "parameters": [
+      "colonoscopy"
+    ],
+    "symptoms": [
+      "blood stool"
+    ],
+    "risk": {
+      "low": "stage1",
+      "medium": "stage2",
+      "high": "stage4"
+    },
+    "specialist": "Oncologist",
+    "category": "Oncology"
+  },
+  {
+    "disease": "Testicular Cancer",
+    "parameters": [
+      "ultrasound",
+      "AFP"
+    ],
+    "symptoms": [
+      "lump"
+    ],
+    "risk": {
+      "low": "stage1",
+      "medium": "stage2",
+      "high": "stage4"
+    },
+    "specialist": "Oncologist",
+    "category": "Oncology"
+  },
+  {
+    "disease": "Ovarian Cancer",
+    "parameters": [
+      "CA-125",
+      "USG"
+    ],
+    "symptoms": [
+      "bloating"
+    ],
+    "risk": {
+      "low": "stage1",
+      "medium": "stage2",
+      "high": "stage4"
+    },
+    "specialist": "Oncologist",
+    "category": "Oncology"
+  },
+  {
+    "disease": "Cervical Cancer",
+    "parameters": [
+      "Pap smear"
+    ],
+    "symptoms": [
+      "bleeding"
+    ],
+    "risk": {
+      "low": "stage1",
+      "medium": "stage2",
+      "high": "stage4"
+    },
+    "specialist": "Oncologist",
+    "category": "Oncology"
+  },
+  {
+    "disease": "Gestational Diabetes",
+    "parameters": [
+      "OGTT"
+    ],
+    "symptoms": [
+      "thirst"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "complications"
+    },
+    "specialist": "Obstetrician",
+    "category": "Obstetrics"
+  },
+  {
+    "disease": "Preeclampsia",
+    "parameters": [
+      "BP",
+      "proteinuria"
+    ],
+    "symptoms": [
+      "swelling",
+      "headache"
+    ],
+    "risk": {
+      "low": "mild",
+      "medium": "moderate",
+      "high": "severe"
+    },
+    "specialist": "Obstetrician",
+    "category": "Obstetrics"
+  },
+  {
+    "disease": "Eclampsia",
+    "parameters": [
+      "BP"
+    ],
+    "symptoms": [
+      "seizures"
+    ],
+    "risk": {
+      "low": "moderate",
+      "medium": "severe",
+      "high": "fatal"
+    },
+    "specialist": "Obstetrician",
+    "category": "Obstetrics"
+  }
+]
