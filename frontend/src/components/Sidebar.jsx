@@ -26,8 +26,8 @@ export default function Sidebar({ collapsed, setCollapsed }) {
   return (
     <motion.aside
       animate={{ width: collapsed ? 80 : 260 }}
-      transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="h-screen z-30 flex flex-col overflow-hidden flex-shrink-0 relative"
+      transition={{ duration: 0.25, ease: 'easeInOut' }}
+      className="h-screen flex flex-col overflow-hidden relative border-r border-white/5 shadow-2xl z-40"
       style={{ 
         background: 'linear-gradient(180deg, #0d1117 0%, #070b11 100%)', 
         borderRight: '1px solid rgba(255,255,255,0.06)',

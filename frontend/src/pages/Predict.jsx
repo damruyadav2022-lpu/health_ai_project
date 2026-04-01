@@ -43,16 +43,28 @@ export default function Predict() {
   }, []);
 
   const runPrediction = async () => {
+    if (loading) return;
     setLoading(true);
+    setResult(null);
+    
     try {
       let res;
-      if (tab === 'structured') res = await predictAPI.structured(form);
-      else if (tab === 'symptoms') res = await predictAPI.symptoms(symptomText);
-      else { toast.error('Use the OCR upload button below.'); setLoading(false); return; }
+      if (tab === 'structured') {
+        res = await predictAPI.structured(form);
+      } else if (tab === 'symptoms') {
+        if (!symptomText.trim()) throw new Error('Please enter symptoms first.');
+        res = await predictAPI.symptoms(symptomText);
+      } else {
+        toast.error('Use the OCR upload button below.');
+        setLoading(false);
+        return;
+      }
+      
       setResult(res.data);
       toast.success(`Prediction complete! ${res.data.top_disease} detected.`);
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Prediction failed. Is the backend running?');
+      console.error('Prediction Error:', err);
+      toast.error(err.response?.data?.detail || err.message || 'Prediction failed.');
     } finally {
       setLoading(false);
     }
