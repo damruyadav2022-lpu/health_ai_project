@@ -13,19 +13,22 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./healthai.db"
 
     ALLOWED_ORIGINS: str = (
-        "http://localhost:5173,http://localhost:3000,https://healthai-production.up.railway.app"
+        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000"
     )
 
     TESSERACT_CMD: str = "tesseract"
     RATE_LIMIT: str = "100/minute"
+    ANTHROPIC_API_KEY: str = "sk-REPLACE_WITH_YOUR_ANTHROPIC_KEY"
+    ANTHROPIC_ADMIN_API_KEY: str = "" # Required for organizational key management
 
     @property
     def origins_list(self) -> List[str]:
         return [o.strip() for o in self.ALLOWED_ORIGINS.split(",")]
 
-    class Config:
-        env_file = ".env"
-        extra = "ignore"
+    model_config = {
+        "env_file": ".env",
+        "extra": "ignore"
+    }
 
 
 settings = Settings()

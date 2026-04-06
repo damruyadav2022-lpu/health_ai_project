@@ -12,28 +12,51 @@ async def ocr_extract(
     current_user=Depends(get_current_user),
 ):
     """Extract health data and run AI diagnosis from an uploaded medical report."""
-    if not file.content_type or not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="Only image files are supported (PNG, JPG, etc.)")
+    ALLOWED_TYPES = [
+        "image/png", "image/jpeg", "image/jpg", "image/webp",
+        "application/pdf", 
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/msword"
+    ]
+    
+    # 1. Validation
+    if file.content_type not in ALLOWED_TYPES and not any(file.filename.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.webp', '.pdf', '.docx', '.doc']):
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Unsupported file type: {file.content_type}. Please upload PNG, JPG, PDF, or DOCX."
+        )
 
     try:
-        image_bytes = await file.read()
-        text = ocr_service.extract_text(image_bytes)
+        # 2. Reading file
+        file_bytes = await file.read()
+        if not file_bytes:
+            raise HTTPException(status_code=400, detail="Empty file uploaded.")
+
+        # 3. Text Extraction
+        text = ocr_service.extract_text(file_bytes, filename=file.filename)
+        
+        # 4. Parsing extracted text
         parsed_values = ocr_service.parse_values(text)
         
-        # Run intelligence analysis
+        # 5. Intelligence Diagnosis
         diagnosis = predict_service.analyze_report_data(parsed_values)
         
+        # 6. Response
         return {
             "filename": file.filename,
-            "extracted_text": text,
+            "extracted_text": text[:2000],  # Truncate if extremely long for response
             "parsed_values": parsed_values,
             "diagnosis": diagnosis,
-            "message": f"Successfully analyzed {len(parsed_values)} parameters.",
+            "message": f"Successfully parsed {len(parsed_values)} parameters.",
+            "is_demo": not ocr_service.OCR_AVAILABLE or text.startswith("DEMO MODE")
         }
-    except RuntimeError as e:
-        raise HTTPException(
-            status_code=503,
-            detail=f"OCR service unavailable: {str(e)}. Please install Tesseract OCR.",
-        )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"OCR processing failed: {str(e)}")
+        # Check if it's a TesseractNotFoundError without directly referencing the module
+        if "TesseractNotFoundError" in str(type(e)) or "tesseract is not installed" in str(e).lower():
+            raise HTTPException(
+                status_code=503,
+                detail="Tesseract OCR engine not found. Please install tesseract-ocr on your system.",
+            )
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"OCR engine error: {str(e)}")

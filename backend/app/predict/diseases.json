@@ -1,79 +1,63 @@
 [
   {
+    "id": "diabetes_1",
     "disease": "Diabetes Mellitus",
-    "parameters": [
-      "FBS",
-      "PPBS",
-      "HbA1c",
-      "BMI"
-    ],
-    "symptoms": [
-      "frequent urination",
-      "thirst",
-      "fatigue"
-    ],
-    "risk": {
-      "low": "<5.7",
-      "medium": "5.7-6.4",
-      "high": ">=6.5"
-    },
+    "description": "A chronic metabolic disorder characterized by high levels of blood glucose (blood sugar), which leads over time to serious damage to the heart, blood vessels, eyes, kidneys and nerves.",
+    "parameters": ["FBS", "PPBS", "HbA1c", "BMI", "Glucose"],
+    "symptoms": ["frequent urination", "thirst", "fatigue", "blurred vision"],
+    "risk": { "low": "<100", "medium": "100-125", "high": ">=126" },
+    "precautions": ["Monitor blood sugar daily", "Carry a source of fast-acting sugar", "Foot care inspection"],
+    "dos": ["Eat whole grains and leafy greens", "30 mins of moderate exercise", "Stay hydrated"],
+    "donts": ["Avoid sugary drinks/sodas", "Don't skip meals", "Avoid excessive alcohol"],
+    "lifestyle": "Maintain a healthy weight and follow a low-glycemic diet.",
     "specialist": "Endocrinologist",
-    "category": "Metabolic"
+    "category": "Metabolic",
+    "color": "#f59e0b"
   },
   {
+    "id": "htn_1",
     "disease": "Hypertension",
-    "parameters": [
-      "systolic BP",
-      "diastolic BP"
-    ],
-    "symptoms": [
-      "headache",
-      "dizziness"
-    ],
-    "risk": {
-      "low": "<120/80",
-      "medium": "120-139",
-      "high": ">=140"
-    },
+    "description": "A long-term medical condition in which the blood pressure in the arteries is persistently elevated. High blood pressure typically does not cause symptoms but long-term high blood pressure is a major risk factor for stroke, coronary artery disease, and heart failure.",
+    "parameters": ["systolic", "diastolic"],
+    "symptoms": ["headache", "dizziness", "nosebleed"],
+    "risk": { "low": "<120/80", "medium": "120-139", "high": ">=140" },
+    "precautions": ["Reduce sodium intake", "Regular BP monitoring", "Stress management"],
+    "dos": ["Increase potassium-rich foods", "Aerobic exercise", "Adequate sleep"],
+    "donts": ["Limit caffeine", "Avoid smoking", "Reduce processed foods"],
+    "lifestyle": "Follow the DASH diet (Dietary Approaches to Stop Hypertension).",
     "specialist": "Cardiologist",
-    "category": "Cardiovascular"
+    "category": "Cardiovascular",
+    "color": "#ef4444"
   },
   {
+    "id": "asthma_1",
     "disease": "Asthma",
-    "parameters": [
-      "FEV1",
-      "SpO2"
-    ],
-    "symptoms": [
-      "wheezing",
-      "shortness of breath"
-    ],
-    "risk": {
-      "low": "mild",
-      "medium": "moderate",
-      "high": "severe"
-    },
+    "description": "A condition in which your airways narrow and swell and may produce extra mucus. This can make breathing difficult and trigger coughing, a whistling sound (wheezing) when you breathe out and shortness of breath.",
+    "parameters": ["FEV1", "SpO2"],
+    "symptoms": ["wheezing", "shortness of breath", "chest tightness"],
+    "risk": { "low": "mild", "medium": "moderate", "high": "severe" },
+    "precautions": ["Identify and avoid triggers", "Keep an inhaler handy", "Get flu/pneumonia vaccines"],
+    "dos": ["Deep breathing exercises", "Maintain clean air filters", "Regular follow-ups"],
+    "donts": ["Avoid pet dander/smoke", "Don't ignore increasing symptoms", "Avoid strong perfumes"],
+    "lifestyle": "Stay active but monitor exercise-induced symptoms.",
     "specialist": "Pulmonologist",
-    "category": "Respiratory"
+    "category": "Respiratory",
+    "color": "#8b5cf6"
   },
   {
-    "disease": "Dengue",
-    "parameters": [
-      "platelet",
-      "temperature"
-    ],
-    "symptoms": [
-      "fever",
-      "joint pain",
-      "rash"
-    ],
-    "risk": {
-      "low": ">100k",
-      "medium": "50-100k",
-      "high": "<50k"
-    },
+    "id": "dengue_1",
+    "disease": "Dengue Fever",
+    "description": "A mosquito-borne viral disease that has rapidly spread in all regions in recent years. Dengue virus is transmitted by female mosquitoes mainly of the species Aedes aegypti.",
+    "parameters": ["Platelet", "temperature"],
+    "symptoms": ["fever", "joint pain", "rash", "severe headache"],
+    "risk": { "low": ">150k", "medium": "50k-150k", "high": "<50k" },
+    "precautions": ["Bed rest is essential", "Prevent mosquito bites", "Watch for bleeding gums"],
+    "dos": ["Hydration with electrolytes", "Papaya leaf extract (consult doc)", "Take paracetamol for fever"],
+    "donts": ["Avoid Aspirin/Ibuprofen (bleeding risk)", "Don't delay hospitalization if platelet drops"],
+    "lifestyle": "Focus on rest and intense fluid replacement.",
     "specialist": "Infectious Disease Specialist",
-    "category": "Infectious"
+    "category": "Infectious",
+    "color": "#0ea5e9"
   },
   {
     "disease": "Malaria",

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Download, Eye, Calendar, Brain, Loader2, Plus, X } from 'lucide-react';
 import Layout from '../components/Layout';
-import FileUpload from '../components/FileUpload';
 import { historyAPI } from '../api/client';
 import toast from 'react-hot-toast';
 

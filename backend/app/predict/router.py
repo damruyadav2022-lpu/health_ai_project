@@ -13,17 +13,21 @@ router = APIRouter()
 
 
 def _save_history(db: Session, user_id: int, result: dict, input_type: str):
-    hist = PredictionHistory(
-        user_id=user_id,
-        input_type=input_type,
-        top_disease=result.get("top_disease", ""),
-        probability=result.get("probability", 0),
-        risk_level=result.get("risk_level", "Low"),
-        all_diseases=json.dumps(result.get("all_diseases", [])),
-        explanation=result.get("explanation", ""),
-    )
-    db.add(hist)
-    db.commit()
+    try:
+        hist = PredictionHistory(
+            user_id=user_id,
+            input_type=input_type,
+            top_disease=result.get("top_disease", ""),
+            probability=result.get("probability", 0),
+            risk_level=result.get("risk_level", "Low"),
+            all_diseases=json.dumps(result.get("all_diseases", [])),
+            explanation=result.get("explanation", ""),
+        )
+        db.add(hist)
+        db.commit()
+    except Exception as e:
+        print(f"⚠️ History Seeding Error: {str(e)}")
+        db.rollback()
 
 
 @router.get("/diseases")

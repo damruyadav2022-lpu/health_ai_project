@@ -13,7 +13,7 @@ export default {
           400: "#243447",
         },
         brand: {
-          50:  "#eef9ff",
+          50: "#eef9ff",
           100: "#d8f1ff",
           200: "#b3e5ff",
           300: "#7dd4fc",
@@ -26,10 +26,10 @@ export default {
         },
         accent: {
           purple: "#8b5cf6",
-          pink:   "#ec4899",
-          amber:  "#f59e0b",
-          green:  "#10b981",
-          red:    "#ef4444",
+          pink: "#ec4899",
+          amber: "#0b3ef5ff",
+          green: "#10b981",
+          red: "#ef4444",
         },
       },
       fontFamily: {
@@ -48,16 +48,16 @@ export default {
         "spin-slow": "spin 3s linear infinite",
       },
       keyframes: {
-        fadeIn:    { from: { opacity: 0 }, to: { opacity: 1 } },
-        slideUp:   { from: { transform: "translateY(20px)", opacity: 0 }, to: { transform: "translateY(0)", opacity: 1 } },
+        fadeIn: { from: { opacity: 0 }, to: { opacity: 1 } },
+        slideUp: { from: { transform: "translateY(20px)", opacity: 0 }, to: { transform: "translateY(0)", opacity: 1 } },
         slideLeft: { from: { transform: "translateX(-20px)", opacity: 0 }, to: { transform: "translateX(0)", opacity: 1 } },
         pulseGlow: { "0%, 100%": { boxShadow: "0 0 15px rgba(14,165,233,0.3)" }, "50%": { boxShadow: "0 0 30px rgba(14,165,233,0.7)" } },
       },
       boxShadow: {
-        glow:       "0 0 20px rgba(14,165,233,0.35)",
-        "glow-lg":  "0 0 40px rgba(14,165,233,0.5)",
-        "glow-red": "0 0 20px rgba(239,68,68,0.35)",
-        card:       "0 4px 24px rgba(0,0,0,0.5)",
+        glow: "0 0 20px rgba(14,165,233,0.35)",
+        "glow-lg": "0 0 40px rgba(14,165,233,0.5)",
+        "glow-red": "0 0 20px rgba(239, 82, 68, 0.41)",
+        card: "0 4px 24px rgba(0,0,0,0.5)",
       },
       borderRadius: {
         xl2: "1rem",

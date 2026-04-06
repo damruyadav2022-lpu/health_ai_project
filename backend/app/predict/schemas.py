@@ -36,6 +36,14 @@ class StructuredInput(BaseModel):
     Albumin: Optional[float] = 3.5
     Albumin_and_Globulin_Ratio: Optional[float] = 1.0
 
+    # Extended Lab parameters for full 100+ disease scan
+    PLATELET: Optional[float] = 150000
+    HBA1C: Optional[float] = 5.6
+    FBS: Optional[float] = 90
+    SYSTOLIC: Optional[float] = 120
+    DIASTOLIC: Optional[float] = 80
+    TEMP: Optional[float] = 98.6
+
     def to_dict(self) -> dict:
         return self.model_dump()
 
@@ -51,6 +59,13 @@ class DiseaseResult(BaseModel):
     risk_level: str
     specialist: str
     color: str
+    category: Optional[str] = "General"
+    description: Optional[str] = ""
+    explanation: Optional[str] = ""
+    precautions: Optional[List[str]] = []
+    dos: Optional[List[str]] = []
+    donts: Optional[List[str]] = []
+    lifestyle: Optional[str] = ""
 
 
 class PredictionResponse(BaseModel):
@@ -59,6 +74,14 @@ class PredictionResponse(BaseModel):
     risk_level: str
     all_diseases: List[DiseaseResult]
     explanation: str
+    specialist: Optional[str] = ""
+    category: Optional[str] = ""
+    description: Optional[str] = ""
+    precautions: Optional[List[str]] = []
+    dos: Optional[List[str]] = []
+    donts: Optional[List[str]] = []
+    lifestyle: Optional[str] = ""
+    color: Optional[str] = ""
     feature_importances: Optional[Dict[str, float]] = {}
     matched_symptoms: Optional[List[str]] = []
     recommendations: Optional[List[str]] = []

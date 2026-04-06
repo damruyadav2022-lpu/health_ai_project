@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:8000/api' : '/api');
+const BASE_URL = '/api';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -18,10 +18,9 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (r) => r,
   (error) => {
+    // In Demo Mode, we don't force login redirects to prevent loops
     if (error.response?.status === 401) {
-      localStorage.removeItem('healthai_token');
-      localStorage.removeItem('healthai_user');
-      window.location.href = '/login';
+      console.warn('Session expired or unauthorized (Demo Mode)');
     }
     return Promise.reject(error);
   }
@@ -50,6 +49,22 @@ export const historyAPI = {
 // ─── Recommendations ────────────────────────────────────
 export const recommendAPI = {
   get: (disease) => api.get(`/recommend?disease=${encodeURIComponent(disease)}`),
+};
+
+// ─── Patients ───────────────────────────────────────────
+export const patientsAPI = {
+  list: () => api.get('/patients'),
+  get: (id) => api.get(`/patients/${id}`),
+  create: (data) => api.post('/patients', data),
+  update: (id, data) => api.put(`/patients/${id}`, data),
+  delete: (id) => api.delete(`/patients/${id}`),
+};
+
+// ─── Appointments ─────────────────────────────────────────
+export const appointmentsAPI = {
+  list: () => api.get('/appointments'),
+  create: (data) => api.post('/appointments', data),
+  update: (id, data) => api.put(`/appointments/${id}`, data),
 };
 
 export default api;

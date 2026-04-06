@@ -14,11 +14,17 @@ export default function KPICard({ title, value, subtitle, icon: Icon, trend, ris
 
   return (
     <motion.div
+      whileHover={{ y: -5, scale: 1.01 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.4, ease: 'easeOut' }}
-      className={`kpi-card bg-gradient-to-br ${style.bg} border ${style.border} ${style.glow}`}
+      transition={{ delay, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+      className={`relative group p-5 rounded-3xl border backdrop-blur-2xl transition-all duration-500
+        ${style.bg} ${style.border} ${style.glow}
+        bg-white/[0.02] shadow-2xl hover:bg-white/[0.05] overflow-hidden`}
     >
+      {/* Decorative inner glow */}
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/5 blur-[64px] rounded-full group-hover:bg-white/10 transition-colors" />
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none" />
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{title}</p>

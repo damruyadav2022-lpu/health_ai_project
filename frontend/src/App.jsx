@@ -1,12 +1,23 @@
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import Dashboard from './pages/Dashboard';
-import Predict from './pages/Predict';
-import Analytics from './pages/Analytics';
-import Reports from './pages/Reports';
-import Patients from './pages/Patients';
-import DiseaseExplorer from './pages/DiseaseExplorer';
+
+// Lazy load pages for "Run it Fast" performance
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Predict = lazy(() => import('./pages/Predict'));
+const Scribe = lazy(() => import('./pages/Scribe'));
+const Reports = lazy(() => import('./pages/Reports'));
+const Patients = lazy(() => import('./pages/Patients'));
+const DiseaseExplorer = lazy(() => import('./pages/DiseaseExplorer'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+
+// Optimized Loading Spinner
+const NexusLoader = () => (
+  <div className="flex h-screen w-full items-center justify-center bg-slate-950">
+    <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+  </div>
+);
 
 function App() {
   return (
@@ -20,16 +31,19 @@ function App() {
             error: { iconTheme: { primary: '#ef4444', secondary: '#111827' } },
           }}
         />
-        <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/predict" element={<Predict />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/patients" element={<Patients />} />
-          <Route path="/explorer" element={<DiseaseExplorer />} />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
+        <Suspense fallback={<NexusLoader />}>
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/predict" element={<Predict />} />
+            <Route path="/scribe" element={<Scribe />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/patients" element={<Patients />} />
+            <Route path="/explorer" element={<DiseaseExplorer />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </AuthProvider>
   );

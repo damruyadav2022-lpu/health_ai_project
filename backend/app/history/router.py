@@ -17,29 +17,42 @@ def get_history(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    """Return paginated prediction history for the current user."""
-    total = db.query(PredictionHistory).filter(PredictionHistory.user_id == current_user.id).count()
-    records = (
-        db.query(PredictionHistory)
-        .filter(PredictionHistory.user_id == current_user.id)
-        .order_by(PredictionHistory.created_at.desc())
-        .offset((page - 1) * limit)
-        .limit(limit)
-        .all()
-    )
+    try:
+        total = db.query(PredictionHistory).filter(PredictionHistory.user_id == current_user.id).count()
+        records = (
+            db.query(PredictionHistory)
+            .filter(PredictionHistory.user_id == current_user.id)
+            .order_by(PredictionHistory.created_at.desc())
+            .offset((page - 1) * limit)
+            .limit(limit)
+            .all()
+        )
+    except Exception as e:
+        # Fallback to empty if DB is locked or table missing during migration
+        return {
+            "total": 0,
+            "page": page,
+            "limit": limit,
+            "total_pages": 1,
+            "items": [],
+            "error": str(e)
+        }
 
     items = []
     for rec in records:
-        items.append({
-            "id": rec.id,
-            "input_type": rec.input_type,
-            "top_disease": rec.top_disease,
-            "probability": rec.probability,
-            "risk_level": rec.risk_level,
-            "explanation": rec.explanation,
-            "all_diseases": json.loads(rec.all_diseases) if rec.all_diseases else [],
-            "created_at": rec.created_at.isoformat() if rec.created_at else None,
-        })
+        try:
+            items.append({
+                "id": rec.id,
+                "input_type": rec.input_type,
+                "top_disease": rec.top_disease,
+                "probability": rec.probability,
+                "risk_level": rec.risk_level,
+                "explanation": rec.explanation,
+                "all_diseases": json.loads(rec.all_diseases) if rec.all_diseases else [],
+                "created_at": rec.created_at.isoformat() if rec.created_at else None,
+            })
+        except Exception:
+            continue
 
     return {
         "total": total,

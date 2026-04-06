@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
@@ -10,6 +11,9 @@ from app.predict.router import router as predict_router
 from app.ocr.router import router as ocr_router
 from app.history.router import router as history_router
 from app.recommend.router import router as recommend_router
+from app.patients.router import router as patients_router
+from app.chat.router import router as chat_router
+from app.admin.router import router as admin_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -24,17 +28,41 @@ async def lifespan(app: FastAPI):
     logger.info("🚀 HealthAI Platform starting up...")
     create_tables()
     
-    # Seed Demo User
+    # Seed Demo Data for "Super Cool" Dashboards
     from app.database import SessionLocal
     from app.auth.service import get_or_create_demo_user
+    from app.history.models import PredictionHistory
+    import json
     db = SessionLocal()
     try:
         demo_user = get_or_create_demo_user(db)
-        logger.info(f"✅ Demo User active: {demo_user.email}")
+        # Seed history if empty
+        if db.query(PredictionHistory).filter(PredictionHistory.user_id == demo_user.id).count() == 0:
+            logger.info("🌱 Seeding Super Cool Demo Data...")
+            scenarios = [
+                {"disease": "Diabetes Mellitus", "prob": 0.82, "risk": "High", "type": "structured"},
+                {"disease": "Hypertension", "prob": 0.45, "risk": "Medium", "type": "symptoms"},
+                {"disease": "Dengue", "prob": 0.12, "risk": "Low", "type": "ocr"}
+            ]
+            for s in scenarios:
+                h = PredictionHistory(
+                    user_id=demo_user.id,
+                    input_type=s["type"],
+                    top_disease=s["disease"],
+                    probability=s["prob"],
+                    risk_level=s["risk"],
+                    all_diseases=json.dumps([{"display_name": s["disease"], "probability": s["prob"]}]),
+                    explanation=f"Demo prediction based on typical {s['disease']} parameters."
+                )
+                db.add(h)
+            db.commit()
+            logger.info("✅ Dashboard data seeded.")
+    except Exception as e:
+        logger.warning(f"⚠️ Seeding skipped: {str(e)}")
     finally:
         db.close()
-        
-    logger.info("✅ Database tables created.")
+    
+    logger.info("✅ HealthAI Platform environment ready.")
     yield
     logger.info("🛑 HealthAI Platform shutting down.")
 
@@ -63,7 +91,23 @@ app.include_router(predict_router, prefix="/api", tags=["Prediction"])
 app.include_router(ocr_router, prefix="/api", tags=["OCR"])
 app.include_router(history_router, prefix="/api", tags=["History"])
 app.include_router(recommend_router, prefix="/api", tags=["Recommendations"])
+app.include_router(patients_router, prefix="/api", tags=["Patients"])
+app.include_router(chat_router, prefix="/api", tags=["Chat"])
+app.include_router(admin_router, prefix="/api/admin", tags=["Admin Control"])
 
+# 🛡️ Global Exception Handler to prevent 500 errors in UI
+from fastapi.responses import JSONResponse
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"❌ CRITICAL ERROR: {str(exc)}")
+    return JSONResponse(
+        status_code=500, # Return proper error to trigger frontend catch block
+        content={
+            "status": "error",
+            "message": "System is self-healing. Please refresh.",
+            "detail": str(exc)
+        },
+    )
 
 @app.get("/", tags=["Health"])
 async def root():
