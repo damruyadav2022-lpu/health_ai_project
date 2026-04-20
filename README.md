@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🧬 HealthAI (Dr.AI) Clinical Intelligence Platform
 
 An enterprise-grade, real-time Clinical AI Platform combining multi-modal diagnostics, a generative AI medical scribe, OCR report scanning, and population health analytics into a single unified dashboard.
@@ -120,3 +121,7 @@ health_ai_project/
 **Deepak Kumar Yadav**
 *   GitHub: [@damruyadav2022-lpu](https://github.com/damruyadav2022-lpu)
 *   LinkedIn: [Deepak Kumar Yadav](https://www.linkedin.com/in/)
+=======
+# health_ai_project
+A next-generation AI-powered healthcare intelligence platform that transforms raw medical data, reports, and symptoms into real-time clinical insights, risk predictions, and decision support.
+>>>>>>> 2cc9537a86fabe7d3dfd177a00d0754304d84da9
