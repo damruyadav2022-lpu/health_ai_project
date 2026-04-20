@@ -26,10 +26,10 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (user) {
       localStorage.setItem('dr_ai_user', JSON.stringify(user));
-      localStorage.setItem('dr_ai_token', 'JWT_SECURE_HIPAA_TOKEN_DR_AI_2026');
+      localStorage.setItem('healthai_token', 'JWT_SECURE_HIPAA_TOKEN_DR_AI_2026');
     } else {
       localStorage.removeItem('dr_ai_user');
-      localStorage.removeItem('dr_ai_token');
+      localStorage.removeItem('healthai_token');
     }
   }, [user]);
 
@@ -43,8 +43,8 @@ export function AuthProvider({ children }) {
     const newUser = DEMO_USERS[role];
     setUser(newUser);
     toast.success(`Secure Clinical Access: Switched to ${role.toUpperCase()} Dashboard`, {
-       icon: '🔐',
-       style: { background: '#0d1117', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }
+      icon: '🔐',
+      style: { background: '#0d1117', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }
     });
   };
 

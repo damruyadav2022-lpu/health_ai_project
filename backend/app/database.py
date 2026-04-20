@@ -5,11 +5,20 @@ from app.config import settings
 
 from sqlalchemy import event
 
+import os
+
 engine = create_engine(
     settings.DATABASE_URL,
     connect_args={"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {},
     echo=settings.DEBUG,
 )
+
+if "sqlite" in settings.DATABASE_URL:
+    db_path = settings.DATABASE_URL.split("///")[-1]
+    if db_path and not db_path.startswith(":memory:"):
+        db_dir = os.path.dirname(db_path)
+        if db_dir:
+            os.makedirs(db_dir, exist_ok=True)
 
 # Enable SQLite WAL mode (Write-Ahead Logging) for massive performance boosts
 @event.listens_for(engine, "connect")
@@ -35,7 +44,9 @@ def get_db():
 
 def create_tables():
     """Create all tables on startup."""
-    from app.auth.models import User  # noqa: F401
-    from app.history.models import PredictionHistory  # noqa: F401
-    from app.patients.models import Patient  # noqa: F401
+    from app.auth.models import User                    # noqa: F401
+    from app.history.models import PredictionHistory    # noqa: F401
+    from app.patients.models import Patient             # noqa: F401
+    
     Base.metadata.create_all(bind=engine)
+

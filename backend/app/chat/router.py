@@ -17,6 +17,27 @@ class ScribeRequest(BaseModel):
     probability: float
     explanation: str
 
+class PatientData(BaseModel):
+    id: Optional[str] = ""
+    age: Optional[int] = None
+    gender: Optional[str] = ""
+    history: Optional[List[str]] = []
+    vitals: Optional[dict] = {}
+
+class AnalyticsState(BaseModel):
+    risk_level: Optional[str] = ""
+    disease_probabilities: Optional[dict] = {}
+
+class ClinicalIntelligenceRequest(BaseModel):
+    message: str
+    speaker: str = "Patient"  # "Doctor" or "Patient"
+    current_soap: Optional[dict] = None
+    patient_data: Optional[PatientData] = None
+    analytics_state: Optional[AnalyticsState] = None
+
+# Keep legacy alias for backward compat
+SoapExtractionRequest = ClinicalIntelligenceRequest
+
 class PrescriptionRequest(BaseModel):
     diagnosis: str
     symptoms: str
@@ -125,6 +146,199 @@ Required JSON format:
             
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/extract-soap")
+async def extract_soap_incremental(req: ClinicalIntelligenceRequest):
+    """
+    Clinical Intelligence Engine — real-time incremental SOAP + analytics + audit.
+    """
+    is_placeholder = not settings.ANTHROPIC_API_KEY or "REPLACE" in settings.ANTHROPIC_API_KEY or settings.ANTHROPIC_API_KEY == "sk-..."
+    current = req.current_soap or {}
+
+    if is_placeholder:
+        import re as _re
+        msg = req.message.lower()
+        pd  = req.patient_data or PatientData()
+        age = pd.age or 0
+
+        # -- Critical alert detection --
+        alerts = []
+        critical_map = {
+            "chest pain":           "CRITICAL: Chest Pain detected — possible cardiac emergency. Immediate ECG required.",
+            "shortness of breath":  "CRITICAL: Respiratory distress detected — assess O2 saturation immediately.",
+            "unconscious":          "CRITICAL: Loss of consciousness — call emergency services.",
+            "seizure":              "CRITICAL: Seizure activity reported — secure airway, do not restrain.",
+            "stroke":               "CRITICAL: Stroke symptoms detected — activate stroke protocol immediately.",
+            "severe bleeding":      "CRITICAL: Active haemorrhage — apply pressure, call emergency services.",
+        }
+        for kw, alert in critical_map.items():
+            if kw in msg:
+                alerts.append(alert)
+
+        # -- Symptom extraction --
+        subj_kw  = ["feel", "pain", "tired", "fatigue", "nausea", "dizzy", "vomit",
+                    "cough", "fever", "cold", "weak", "headache", "bleed", "sweat",
+                    "ache", "rash", "breath", "thirst", "hunger", "vision", "loss"]
+        obj_kw   = ["bp", "blood pressure", "temp", "hr", "pulse", "spo2", "weight", "height", "oxygen", "glucose"]
+        plan_kw  = ["order", "refer", "prescribe", "schedule", "follow", "test", "cbc", "xray", "ecg", "monitor"]
+
+        subj, obj, assess, plan, syms = [], [], [], [], {}
+
+        if req.speaker == "Patient":
+            for kw in subj_kw:
+                if kw in msg:
+                    subj.append(req.message)
+                    syms[kw] = round(0.85 + (0.1 if age > 60 else 0), 2)
+                    break
+        elif req.speaker == "Doctor":
+            if any(w in msg for w in obj_kw):  obj.append(req.message)
+            elif any(w in msg for w in plan_kw): plan.append(req.message)
+
+        # -- Risk engine --
+        risk = "Low"
+        if alerts:                            risk = "High"
+        elif age > 60 and subj:              risk = "High"
+        elif age > 40 and subj:             risk = "Medium"
+        elif subj:                          risk = "Medium"
+
+        # -- Disease probability (demo heuristic) --
+        disease_probs = {}
+        if "fever" in msg:     disease_probs["viral_infection"] = 0.75
+        if "fatigue" in msg:   disease_probs["anaemia"]        = 0.55
+        if "headache" in msg:  disease_probs["hypertension"]   = 0.60
+        if "cough" in msg:     disease_probs["respiratory_infection"] = 0.70
+        if "thirst" in msg:    disease_probs["diabetes"]       = 0.65
+        if "chest" in msg:     disease_probs["cardiac_event"]  = 0.80
+
+        conf = 0.88 if subj else (0.90 if obj else 0.0)
+        action = "symptom_added" if subj else ("vital_recorded" if obj else ("plan_added" if plan else "no_change"))
+        status = "updated" if (subj or obj or plan or alerts) else "no_change"
+
+        return {
+            "updates": {
+                "subjective_add": subj, "objective_add": obj,
+                "assessment_add": assess, "plan_add": plan, "alerts": alerts,
+            },
+            "analytics": {
+                "risk_level": risk,
+                "disease_probabilities": disease_probs,
+                "confidence_score": conf,
+                "symptom_confidence": syms,
+            },
+            "audit_log": {
+                "action": action,
+                "reason": f"{req.speaker} reported: {req.message[:80]}",
+                "source": req.speaker.lower(),
+            },
+            "status": status,
+        }
+
+    try:
+        import json, re
+        pd   = req.patient_data or PatientData()
+        an   = req.analytics_state or AnalyticsState()
+        soap = json.dumps(current, indent=2) if current else "{}"
+
+        patient_ctx = json.dumps({
+            "id": pd.id, "age": pd.age, "gender": pd.gender,
+            "history": pd.history, "vitals": pd.vitals
+        }, indent=2)
+        analytics_ctx = json.dumps({
+            "risk_level": an.risk_level,
+            "disease_probabilities": an.disease_probabilities
+        }, indent=2)
+
+        SYSTEM_PROMPT = """You are the Clinical Intelligence Engine for a real-time AI healthcare system.
+
+You are deeply integrated with a backend consisting of:
+* Patient database
+* Clinical notes (SOAP)
+* Risk analytics
+* ML prediction services
+
+Your job is NOT to generate data — your job is to:
+✔ Interpret real backend data
+✔ Update clinical state incrementally
+✔ Produce accurate intelligence
+✔ Maintain consistency across system modules
+
+## 🔒 STRICT NON-NEGOTIABLE RULES
+1. NEVER hallucinate or fabricate medical data
+2. ONLY use incoming user/doctor input, existing database state, backend API responses
+3. If data is missing → return "insufficient_data"
+4. Do NOT overwrite existing valid data
+5. Do NOT duplicate entries
+6. Be medically logical and consistent
+
+## 🧠 CORE RESPONSIBILITIES
+1. SUBJECTIVE: symptoms, duration, severity, pattern — from Patient messages ONLY
+2. OBJECTIVE: measurable/observed data from Doctor messages ONLY
+3. ASSESSMENT: suggest conditions ONLY if medically supported by input
+4. PLAN: tests, basic treatment, monitoring — realistic and minimal
+5. RISK ENGINE: compute risk using age + symptoms + duration
+   - age > 60 + fever → High
+   - mild fatigue → Medium
+6. ANALYTICS: update disease_probabilities and confidence_score
+7. AUDIT LOG: every update must include action log
+
+## ⚡ REAL-TIME CONSTRAINTS
+* Process ONLY the latest message — do NOT recompute full history
+* Return ONLY incremental updates — keep response lightweight
+
+## 📤 OUTPUT FORMAT (STRICT JSON ONLY)
+{
+  "updates": {
+    "subjective_add": [],
+    "objective_add": [],
+    "assessment_add": [],
+    "plan_add": [],
+    "alerts": []
+  },
+  "analytics": {
+    "risk_level": "Low | Medium | High | insufficient_data",
+    "disease_probabilities": {},
+    "confidence_score": 0.0,
+    "symptom_confidence": {}
+  },
+  "audit_log": {
+    "action": "",
+    "reason": "",
+    "source": "patient | doctor | backend"
+  },
+  "status": "updated | no_change | insufficient_data"
+}
+
+RETURN ONLY VALID JSON. No explanation. No preamble."""
+
+        USER_PROMPT = f"""## Patient Context
+{patient_ctx}
+
+## Current SOAP State
+{soap}
+
+## Current Analytics State
+{analytics_ctx}
+
+## New Input
+Speaker: {req.speaker}
+Message: "{req.message}"
+
+Return ONLY the incremental JSON update:"""
+
+        response = client.messages.create(
+            model="claude-3-haiku-20240307",
+            max_tokens=900,
+            system=SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": USER_PROMPT}]
+        )
+        text  = response.content[0].text
+        match = re.search(r'\{.*\}', text, re.DOTALL)
+        if match:
+            return json.loads(match.group())
+        return {"status": "insufficient_data"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.post("/scribe", response_model=ChatResponse)
 async def generate_clinical_scribe_note(req: ScribeRequest):
     is_placeholder = not settings.ANTHROPIC_API_KEY or "REPLACE" in settings.ANTHROPIC_API_KEY or settings.ANTHROPIC_API_KEY == "sk-..."

@@ -25,20 +25,33 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup/shutdown lifecycle."""
-    logger.info("🚀 HealthAI Platform starting up...")
+    # 0. System Dependency Checks (Tesseract)
+    import subprocess
+    tesseract_available = False
+    try:
+        subprocess.run(["tesseract", "--version"], capture_output=True, check=True)
+        tesseract_available = True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        logger.warning("⚠️ Tesseract OCR not found in PATH. Medical reports will process in DEMO MODE.")
+
+    logger.info(f"🚀 HealthAI Platform starting up... (OCR: {'READY' if tesseract_available else 'DEMO'})")
     create_tables()
-    
-    # Seed Demo Data for "Super Cool" Dashboards
-    from app.database import SessionLocal
-    from app.auth.service import get_or_create_demo_user
+
+    # Seed Demo Data (Optimized: Import only when needed)
+    from app.database import SessionLocal, engine
     from app.history.models import PredictionHistory
-    import json
+
+    
     db = SessionLocal()
     try:
+        from app.auth.service import get_or_create_demo_user
         demo_user = get_or_create_demo_user(db)
-        # Seed history if empty
-        if db.query(PredictionHistory).filter(PredictionHistory.user_id == demo_user.id).count() == 0:
+        
+        # High-speed count check
+        count = db.query(PredictionHistory).filter(PredictionHistory.user_id == demo_user.id).limit(1).count()
+        if count == 0:
             logger.info("🌱 Seeding Super Cool Demo Data...")
+            import json
             scenarios = [
                 {"disease": "Diabetes Mellitus", "prob": 0.82, "risk": "High", "type": "structured"},
                 {"disease": "Hypertension", "prob": 0.45, "risk": "Medium", "type": "symptoms"},
@@ -58,7 +71,8 @@ async def lifespan(app: FastAPI):
             db.commit()
             logger.info("✅ Dashboard data seeded.")
     except Exception as e:
-        logger.warning(f"⚠️ Seeding skipped: {str(e)}")
+        logger.warning(f"⚠️ Seeding optimized out or skipped: {str(e)}")
+
     finally:
         db.close()
     
@@ -86,14 +100,14 @@ app.add_middleware(
 )
 
 # Register routers
-app.include_router(auth_router, prefix="/api/auth", tags=["Authentication"])
-app.include_router(predict_router, prefix="/api", tags=["Prediction"])
-app.include_router(ocr_router, prefix="/api", tags=["OCR"])
-app.include_router(history_router, prefix="/api", tags=["History"])
-app.include_router(recommend_router, prefix="/api", tags=["Recommendations"])
-app.include_router(patients_router, prefix="/api", tags=["Patients"])
-app.include_router(chat_router, prefix="/api", tags=["Chat"])
-app.include_router(admin_router, prefix="/api/admin", tags=["Admin Control"])
+app.include_router(auth_router,          prefix="/api/auth",  tags=["Authentication"])
+app.include_router(predict_router,        prefix="/api",       tags=["Prediction"])
+app.include_router(ocr_router,            prefix="/api",       tags=["OCR"])
+app.include_router(history_router,        prefix="/api",       tags=["History"])
+app.include_router(recommend_router,      prefix="/api",       tags=["Recommendations"])
+app.include_router(patients_router,       prefix="/api",       tags=["Patients"])
+app.include_router(chat_router,           prefix="/api",       tags=["Chat"])
+app.include_router(admin_router,          prefix="/api/admin", tags=["Admin Control"])
 
 # 🛡️ Global Exception Handler to prevent 500 errors in UI
 from fastapi.responses import JSONResponse

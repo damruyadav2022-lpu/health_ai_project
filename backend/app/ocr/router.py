@@ -35,6 +35,24 @@ async def ocr_extract(
         # 3. Text Extraction
         text = ocr_service.extract_text(file_bytes, filename=file.filename)
         
+        # 3.5. Medical Relevance Validation
+        keywords = [
+            "patient", "blood", "glucose", "pressure", "bpm", "mg/dl", "diagnosis", 
+            "clinic", "hospital", "dr.", "doctor", "heart", "scan", "test", 
+            "results", "cholesterol", "bmi", "weight", "lab", "medical", 
+            "disease", "symptoms", "prescription", "health", "record", "name",
+            "age", "sex", "gender", "date", "report", "clinical", "history"
+        ]
+        text_lower = text.lower()
+        match_count = sum(1 for kw in keywords if kw in text_lower)
+        
+        # Require at least 2 medical keywords
+        if match_count < 2:
+            raise HTTPException(
+                status_code=422,
+                detail="Security Protocol Triggered: This document does not appear to contain valid medical or clinical telemetry. The Vision AI requires hospital-grade medical reports, lab results, or imaging data."
+            )
+
         # 4. Parsing extracted text
         parsed_values = ocr_service.parse_values(text)
         

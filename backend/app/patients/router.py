@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -12,12 +12,14 @@ router = APIRouter()
 
 @router.get("/patients")
 def read_patients(
+    all_users: bool = Query(False),
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    """Retrieve all patients for the current user with fallback resilience."""
+    """Retrieve all patients with optional global project-wide access."""
     try:
-        return service.get_patients(db=db, user_id=current_user.id)
+        user_id = None if all_users else current_user.id
+        return service.get_patients(db=db, user_id=user_id)
     except Exception as e:
         # Prevent 500 error on dashboard/analytics if DB is unreachable
         print(f"DEBUG: Patients API Fallback triggered: {str(e)}")

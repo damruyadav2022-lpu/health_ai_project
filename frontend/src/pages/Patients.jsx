@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, UserPlus, MoreVertical, Heart, Activity, Star, X, Loader2 } from 'lucide-react';
+import { Search, UserPlus, MoreVertical, Heart, Activity, Star, X, Loader2, Video, Phone } from 'lucide-react';
 import Layout from '../components/Layout';
 import { patientsAPI } from '../api/client';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const DOCTORS = [
   { name: 'Dr. Arun Patel', specialty: 'Endocrinologist', rating: 4.9, available: true },
@@ -18,10 +20,17 @@ export default function Patients() {
     name: '', email: '', phone: '', age: '', disease: '', status: 'Stable'
   });
   const [saving, setSaving] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchPatients();
   }, []);
+
+  const handleCallPatient = (patient) => {
+    const nodeId = patient.phone || patient.email || patient.id.toString();
+    toast.success(`Initializing Secure Neural Link with ${patient.name}`);
+    navigate(`/telemed?target=${nodeId}`);
+  };
 
   const fetchPatients = async () => {
     try {
@@ -73,7 +82,7 @@ export default function Patients() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <div className="xl:col-span-2 glass shadow-2xl overflow-hidden min-h-[400px] relative border-white/5">
+          <div className="xl:col-span-2 glass shadow-2xl border-white/5 overflow-hidden min-h-[400px] relative">
             {loading ? (
               <div className="flex items-center justify-center h-full min-h-[400px]">
                 <Loader2 className="animate-spin text-brand-500" size={32} />
@@ -86,13 +95,13 @@ export default function Patients() {
                 <p className="text-xs font-black uppercase tracking-widest">No patient records found.</p>
               </div>
             ) : (
-              <table className="w-full text-left">
+              <table className="w-full text-left overflow-x-auto block md:table">
                 <thead className="bg-white/[0.02] text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black">
                   <tr>
                     <th className="px-8 py-5">Full Clinical Profile</th>
                     <th className="px-8 py-5 text-center">Protocol Status</th>
                     <th className="px-8 py-5">Real-time Vitals</th>
-                    <th className="px-8 py-5">Communication</th>
+                    <th className="px-8 py-5">Secure Call</th>
                     <th className="px-8 py-5"></th>
                   </tr>
                 </thead>
@@ -124,8 +133,19 @@ export default function Patients() {
                          </div>
                       </td>
                       <td className="px-8 py-6">
-                        <p className="text-[10px] text-white font-bold tracking-tight">{p.email || 'NO_EMAIL'}</p>
-                        <p className="text-[9px] text-slate-500 font-medium mt-1 tracking-widest">{p.phone || 'NO_PHONE'}</p>
+                        <div className="flex items-center gap-3">
+                           <button 
+                             onClick={() => handleCallPatient(p)}
+                             className="w-10 h-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 hover:bg-cyan-500 hover:text-white transition-all shadow-[0_0_15px_rgba(34,211,238,0.1)] active:scale-95"
+                           >
+                             <Video size={16} />
+                           </button>
+                           <button 
+                             className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-all"
+                           >
+                             <Phone size={16} />
+                           </button>
+                        </div>
                       </td>
                       <td className="px-8 py-6 text-right">
                         <button className="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded-lg transition-all">

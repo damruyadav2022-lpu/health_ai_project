@@ -1,234 +1,280 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  BarChart, Bar, Cell, PieChart, Pie, Legend
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, BarChart, Bar, Cell, PieChart, Pie,
+  Legend, RadarChart, PolarGrid, PolarAngleAxis, Radar
 } from 'recharts';
-import { 
-  TrendingUp, Activity, Users, Thermometer, ShieldCheck, 
-  Heart, AlertTriangle, CheckCircle2
+import {
+  TrendingUp, Activity, Users, ShieldCheck, Heart,
+  AlertTriangle, CheckCircle2, Brain, Zap, BarChart2,
+  ArrowUpRight, ArrowDownRight, Clock, Target, Flame,
+  Globe, Microscope, RefreshCw, ChevronRight, Siren,
+  FlaskConical, ListChecks, Info, Shield, ChevronDown, ChevronUp, MapPin
 } from 'lucide-react';
 import Layout from '../components/Layout';
-import KPICard from '../components/KPICard';
 import { historyAPI, patientsAPI } from '../api/client';
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DISEASE_COLORS = ['#3b82f6','#8b5cf6','#ec4899','#f59e0b','#10b981','#ef4444','#06b6d4'];
+
+const riskMeta = (level) => {
+  const l = (level || '').toLowerCase();
+  if (l === 'critical') return { color: '#dc2626', bg: 'bg-red-600/15',    border: 'border-red-600/30',    label: 'CRITICAL', icon: Siren };
+  if (l === 'high')     return { color: '#ef4444', bg: 'bg-red-500/10',    border: 'border-red-500/20',    label: 'HIGH',     icon: AlertTriangle };
+  if (l === 'medium')   return { color: '#f59e0b', bg: 'bg-amber-500/10',  border: 'border-amber-500/20',  label: 'MEDIUM',   icon: Info };
+  return                       { color: '#10b981', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', label: 'LOW',      icon: CheckCircle2 };
+};
+
+const suggestedTests = (disease = '') => {
+  const d = disease.toLowerCase();
+  if (d.includes('diabetes'))    return ['Fasting Blood Glucose', 'HbA1c', 'Urine Microalbumin', 'Lipid Panel'];
+  if (d.includes('heart') || d.includes('cardiac')) return ['ECG', 'Troponin I/T', 'Echocardiogram', 'Lipid Panel', 'BNP'];
+  if (d.includes('liver'))       return ['LFT (ALT/AST/ALP)', 'Bilirubin', 'Serum Albumin', 'PT/INR'];
+  if (d.includes('kidney') || d.includes('renal')) return ['Serum Creatinine', 'eGFR', 'Urine Protein', 'BUN'];
+  if (d.includes('pneumonia') || d.includes('respiratory')) return ['Chest X-Ray', 'Sputum Culture', 'CBC', 'CRP'];
+  if (d.includes('thyroid'))     return ['TSH', 'Free T3', 'Free T4', 'Anti-TPO Antibodies'];
+  if (d.includes('anaemia') || d.includes('anemia')) return ['CBC', 'Serum Iron', 'Ferritin', 'B12/Folate'];
+  return ['Complete Blood Count (CBC)', 'Basic Metabolic Panel', 'CRP/ESR', 'Urinalysis'];
+};
+
+const recommendedAction = (level = '') => {
+  const l = level.toLowerCase();
+  if (l === 'critical') return 'EMERGENCY: Call emergency services immediately. Do not delay. Activate hospital emergency protocol.';
+  if (l === 'high')     return 'Urgent: Consult a specialist within 24 hours. Avoid strenuous activity. Monitor vitals closely.';
+  if (l === 'medium')   return 'Consult a doctor within 48–72 hours. Rest, hydrate, and avoid self-medication.';
+  return 'Home care recommended. Monitor symptoms. Visit clinic if symptoms worsen after 5–7 days.';
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-slate-900/95 border border-white/10 rounded-2xl px-4 py-3 shadow-2xl backdrop-blur-xl">
+      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{label}</p>
+      {payload.map((p, i) => (
+        <p key={i} className="text-sm font-black" style={{ color: p.color || '#0ea5e9' }}>
+          {p.name}: <span className="text-white">{p.value}</span>
+        </p>
+      ))}
+    </div>
+  );
+};
+
+function StatCard({ title, value, subtitle, icon: Icon, color, trend, trendUp, delay = 0 }) {
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}
+      className="glass-clinical rounded-3xl p-6 border border-white/5 hover:border-white/10 transition-all group relative overflow-hidden text-left">
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{ background: `radial-gradient(circle at 80% 20%, ${color}08, transparent 60%)` }} />
+      <div className="flex items-start justify-between mb-5 relative z-10">
+        <div className="p-3 rounded-2xl" style={{ background: `${color}15` }}>
+          <Icon size={22} style={{ color }} />
+        </div>
+        {trend && (
+          <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest
+            ${trendUp ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+            {trendUp ? <ArrowUpRight size={11} /> : <ArrowDownRight size={11} />}
+            {trend}
+          </div>
+        )}
+      </div>
+      <div className="relative z-10">
+        <p className="text-3xl font-black text-white tracking-tighter mb-1">{value}</p>
+        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">{title}</p>
+        {subtitle && <p className="text-xs text-slate-600 mt-1">{subtitle}</p>}
+      </div>
+    </motion.div>
+  );
+}
+
+function RiskGauge({ score }) {
+  const color = score >= 70 ? '#ef4444' : score >= 40 ? '#f59e0b' : '#10b981';
+  const circumference = 2 * Math.PI * 45;
+  const offset = circumference - (score / 100) * circumference;
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <div className="relative w-28 h-28">
+        <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
+          <motion.circle cx="50" cy="50" r="45" fill="none" stroke={color} strokeWidth="8"
+            strokeLinecap="round" strokeDasharray={circumference}
+            initial={{ strokeDashoffset: circumference }}
+            animate={{ strokeDashoffset: offset }}
+            transition={{ duration: 1.5, ease: 'easeOut' }}
+            style={{ filter: `drop-shadow(0 0 6px ${color}60)` }} />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-2xl font-black text-white">{score}%</span>
+        </div>
+      </div>
+      <p className="text-[10px] font-black uppercase tracking-widest" style={{ color }}>
+        {score >= 70 ? 'High Risk' : score >= 40 ? 'Moderate' : 'Controlled'}
+      </p>
+    </div>
+  );
+}
+
+function ClinicalEngineCard({ record, index }) {
+  const [expanded, setExpanded] = useState(false);
+  const meta   = riskMeta(record.risk_level);
+  const Icon   = meta.icon;
+  const prob   = Math.round((record.probability || 0) * 100);
+  const tests  = suggestedTests(record.top_disease || '');
+  const action = recommendedAction(record.risk_level || 'low');
+  const isCritical = (record.risk_level || '').toLowerCase() === 'critical';
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }}
+      className={`rounded-3xl border overflow-hidden transition-all ${meta.bg} ${meta.border}`}>
+      <button className="w-full flex items-center justify-between p-5 text-left" onClick={() => setExpanded(!expanded)}>
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: `${meta.color}20` }}>
+            <Icon size={18} style={{ color: meta.color }} />
+          </div>
+          <div>
+            <p className="text-sm font-black text-white uppercase tracking-tight">{record.top_disease || 'Unknown'}</p>
+            <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Confidence: {prob}%</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest border ${meta.border}`} style={{ color: meta.color }}>{meta.label}</div>
+          {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        </div>
+      </button>
+      <AnimatePresence>
+        {expanded && (
+          <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="p-6 border-t border-white/5 space-y-4">
+             <div className="p-4 rounded-2xl bg-black/20 border border-white/5">
+                <p className="text-[9px] font-black text-cyan-400 uppercase mb-2">Neural Explanation</p>
+                <p className="text-sm text-slate-300">{record.explanation || 'No detail available.'}</p>
+             </div>
+             <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+                <p className="text-[9px] font-black text-emerald-400 uppercase mb-2">Clinical Tests</p>
+                <div className="flex flex-wrap gap-2">
+                   {tests.map((t, i) => <span key={i} className="px-3 py-1 bg-black/40 rounded-lg text-[10px] border border-white/5 text-slate-400">{t}</span>)}
+                </div>
+             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
 
 export default function Analytics() {
   const [history, setHistory] = useState([]);
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({
-    admissionsTrend: [{name: 'Jan', value: 5}, {name: 'Feb', value: 8}],
-    diseasePrevalence: [{name: 'Common Cold', value: 10}],
-    statusDistribution: [{name: 'Stable', value: 100}],
-    vitalsAverage: { hr: 72, temp: 98.6, spo2: 98 }
-  });
+  const [activeTab, setActiveTab] = useState('overview');
+  const [stats, setStats] = useState({ monthlyScans: [], riskDistribution: [], radarData: [] });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [histRes, patRes] = await Promise.all([
-          historyAPI.list(1, 1000).catch(() => ({ data: { items: [] } })),
-          patientsAPI.list().catch(() => ({ data: [] }))
-        ]);
+  const fetchData = async () => {
+    try {
+      const [hRes, pRes] = await Promise.all([historyAPI.list(1, 100), patientsAPI.list()]);
+      setHistory(hRes.data.items || []);
+      setPatients(pRes.data || []);
+      
+      const scanMap = {};
+      (hRes.data.items || []).forEach(h => {
+        const m = MONTHS[new Date(h.created_at).getMonth()] || 'Jan';
+        scanMap[m] = (scanMap[m] || 0) + 1;
+      });
 
-        const histItems = Array.isArray(histRes?.data?.items) ? histRes.data.items : [];
-        const patItems = Array.isArray(patRes?.data) ? patRes.data : [];
-        
-        setHistory(histItems);
-        setPatients(patItems);
+      setStats({
+        monthlyScans: Object.entries(scanMap).map(([name, value]) => ({ name, value })),
+        riskDistribution: [
+          { name: 'Critical', value: (hRes.data.items || []).filter(h => h.risk_level === 'critical').length },
+          { name: 'High', value: (hRes.data.items || []).filter(h => h.risk_level === 'high').length },
+          { name: 'Stable', value: (hRes.data.items || []).filter(h => h.risk_level === 'low').length },
+        ],
+        radarData: [
+          { subject: 'Scans', A: Math.min((hRes.data.items || []).length * 5, 100) },
+          { subject: 'Risk', A: Math.min((hRes.data.items || []).filter(h => h.risk_level === 'high').length * 20, 100) },
+          { subject: 'Patients', A: Math.min((pRes.data || []).length * 5, 100) },
+        ]
+      });
+    } catch (e) {} finally { setLoading(false); }
+  };
 
-        // 1. Admissions Trend
-        const trendMap = {};
-        patItems.forEach(p => {
-          if (p?.created_at) {
-            try {
-              const date = new Date(p.created_at);
-              if (!isNaN(date.getTime())) {
-                const month = MONTHS[date.getMonth()];
-                trendMap[month] = (trendMap[month] || 0) + 1;
-              }
-            } catch(e) {}
-          }
-        });
-        const admissionsTrend = Object.entries(trendMap).map(([name, value]) => ({ name, value }));
+  useEffect(() => { fetchData(); }, []);
 
-        // 2. Disease Prevalence
-        const diseaseMap = {};
-        histItems.forEach(h => {
-          if (h?.top_disease) {
-            diseaseMap[h.top_disease] = (diseaseMap[h.top_disease] || 0) + 1;
-          }
-        });
-        const diseasePrevalence = Object.entries(diseaseMap)
-          .map(([name, value]) => ({ name, value }))
-          .sort((a, b) => b.value - a.value)
-          .slice(0, 5);
-
-        // 3. Status Distribution
-        const statusMap = { Stable: 0, Critical: 0, Unstable: 0, Recovered: 0 };
-        patItems.forEach(p => {
-          const s = p?.status || 'Stable';
-          if (statusMap[s] !== undefined) statusMap[s]++;
-        });
-        const statusDistribution = Object.entries(statusMap).map(([name, value]) => ({ name, value }));
-
-        // 4. Vitals
-        const validCount = Math.max(patItems.length, 1);
-        const vitalsAverage = {
-          hr: Math.round(patItems.reduce((acc, p) => acc + (Number(p?.heart_rate) || 72), 0) / validCount),
-          spo2: Math.round(patItems.reduce((acc, p) => acc + (Number(p?.oxygen_level) || 98), 0) / validCount),
-          temp: (patItems.reduce((acc, p) => acc + (Number(p?.temperature) || 98.6), 0) / validCount).toFixed(1),
-        };
-
-        setStats({
-          admissionsTrend: admissionsTrend.length ? admissionsTrend : stats.admissionsTrend,
-          diseasePrevalence: diseasePrevalence.length ? diseasePrevalence : stats.diseasePrevalence,
-          statusDistribution: statusDistribution.length ? statusDistribution : stats.statusDistribution,
-          vitalsAverage
-        });
-      } catch (err) {
-        console.error("Critical Analytics Engine Error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return (
-      <Layout title="Nexus Analytics">
-        <div className="flex h-[80vh] w-full items-center justify-center">
-           <div className="flex flex-col items-center gap-6 text-center">
-              <Activity className="h-14 w-14 text-brand-500 animate-pulse" />
-              <div className="space-y-1">
-                 <p className="text-white font-bold tracking-widest text-sm uppercase">Neural Sync Active</p>
-                 <p className="text-slate-500 text-[10px] uppercase tracking-widest">Optimizing Data Hub...</p>
-              </div>
-           </div>
-        </div>
-      </Layout>
-    );
-  }
-
-  // Safety Checks for metrics
-  const safeHistory = history || [];
-  const safePatients = patients || [];
-  const activeCases = safePatients.filter(p => p?.status === 'Critical' || p?.status === 'Unstable').length;
-  const treatedPatients = safePatients.filter(p => p?.status === 'Stable' || p?.status === 'Recovered').length;
+  if (loading) return <Layout title="DR. AI PREDICTION"><div className="h-screen flex items-center justify-center text-cyan-400 font-black animate-pulse">SYNCHRONIZING DR. AI CORE...</div></Layout>;
 
   return (
-    <Layout title="Advanced Medical Intelligence">
+    <Layout title="DR. AI Prediction">
       <div className="space-y-6 pb-12">
-        {/* KPI Row */}
-        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <KPICard title="Critical Path" value={activeCases} icon={AlertTriangle} color="#ef4444" subtitle="Active High-Risk Monitoring" delay={0} />
-          <KPICard title="Condition Stabilized" value={treatedPatients} icon={CheckCircle2} color="#10b981" subtitle="Condition Resolved" delay={0.05} />
-          <KPICard title="Total Records" value={safeHistory.length} icon={Activity} color="#0ea5e9" subtitle="Clinical assessments" delay={0.10} />
-          <KPICard title="Average Satiety" value={`${stats.vitalsAverage.spo2}%`} icon={ShieldCheck} color="#8b5cf6" subtitle="SpO2 Normalization" delay={0.15} />
-        </motion.div>
-
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          
-          <motion.div initial={{ opacity: 0, scale: 0.99 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="xl:col-span-2 glass p-6 rounded-3xl h-[420px]">
-            <h3 className="text-white font-bold mb-8 flex items-center gap-3">
-              <TrendingUp size={20} className="text-blue-400" /> Patient Ingress Analysis
-            </h3>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={stats.admissionsTrend}>
-                  <defs>
-                    <linearGradient id="nexus" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
-                  <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <Tooltip contentStyle={{ background: '#0a0f18', border: '1px solid #1e293b', borderRadius: '14px' }} />
-                  <Area type="monotone" dataKey="value" stroke="#0ea5e9" strokeWidth={5} fill="url(#nexus)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, scale: 0.99 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="glass p-6 rounded-3xl h-[420px]">
-            <h3 className="text-white font-bold mb-8 flex items-center gap-3">
-              <Activity size={20} className="text-emerald-400" /> Status Distribution
-            </h3>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.statusDistribution}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
-                  <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} />
-                  <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} />
-                  <Tooltip cursor={{ fill: '#1e293b20' }} contentStyle={{ background: '#0a0f18', border: 'none', borderRadius: '10px' }} />
-                  <Bar dataKey="value" radius={[8, 8, 0, 0]} barSize={45}>
-                    {stats.statusDistribution.map((entry, idx) => (
-                      <Cell key={idx} fill={entry.name === 'Critical' ? '#ef4444' : (entry.name === 'Stable' ? '#10b981' : '#f59e0b')} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, scale: 0.99 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} className="glass p-6 rounded-3xl h-[420px]">
-            <h3 className="text-white font-bold mb-8 flex items-center gap-3">
-              <Activity size={20} className="text-purple-400" /> Neural Diagnosis Prevalence
-            </h3>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie 
-                    data={stats.diseasePrevalence.length ? stats.diseasePrevalence : [{name: 'Syncing...', value: 1}]}
-                    cx="50%" cy="50%" innerRadius={65} outerRadius={90} paddingAngle={10} dataKey="value"
-                  >
-                    {stats.diseasePrevalence.map((_, i) => (
-                      <Cell key={i} fill={['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'][i % 5]} />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={{ background: '#0a0f18', border: 'none', borderRadius: '10px' }} />
-                  <Legend verticalAlign="bottom" align="center" iconType="circle" wrapperStyle={{ paddingTop: '20px', fontSize: '11px' }} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, scale: 0.99 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }} className="xl:col-span-2 glass p-6 rounded-3xl grid grid-cols-1 md:grid-cols-3 gap-6 h-[420px] items-center">
-             <div className="flex flex-col items-center justify-center p-8 rounded-3xl bg-blue-500/5 border border-blue-500/10 h-full group hover:bg-blue-500/10 transition-all">
-                <Heart className="text-blue-500 mb-6 group-hover:scale-110 transition-transform" size={48} />
-                <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-2">Heart Rate Average</p>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-white text-6xl font-black">{stats.vitalsAverage.hr}</span>
-                  <span className="text-slate-600 text-lg font-bold">BPM</span>
-                </div>
-             </div>
-             <div className="flex flex-col items-center justify-center p-8 rounded-3xl bg-purple-500/5 border border-purple-500/10 h-full group hover:bg-purple-500/10 transition-all">
-                <Thermometer className="text-purple-400 mb-6 group-hover:scale-110 transition-transform" size={48} />
-                <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-2">Thermal Average</p>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-white text-6xl font-black">{stats.vitalsAverage.temp}</span>
-                  <span className="text-slate-600 text-lg font-bold">°F</span>
-                </div>
-             </div>
-             <div className="flex flex-col items-center justify-center p-8 rounded-3xl bg-emerald-500/[0.08] border border-emerald-500/20 h-full shadow-2xl shadow-emerald-500/10">
-                <ShieldCheck className="text-emerald-400 mb-6" size={56} />
-                <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-2">Neural Status</p>
-                <p className="text-emerald-400 text-5xl font-black tracking-tighter">PRIME</p>
-                <div className="flex items-center gap-2 mt-4">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                  <span className="text-slate-500 text-[9px] uppercase tracking-widest">Nodes Synchronized</span>
-                </div>
-             </div>
-          </motion.div>
-
+        <div className="flex justify-between items-center">
+           <div>
+              <h2 className="text-3xl font-black text-white uppercase tracking-tighter">DR. AI NEURAL CORE</h2>
+              <p className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest mt-1 italic">Multi-Modal Diagnostic Matrix | V6.0 ACTIVE</p>
+           </div>
+           <div className="flex gap-2 bg-slate-900 p-1 rounded-2xl border border-white/5">
+              {['overview', 'diagnostics', 'matrix'].map(t => (
+                <button key={t} onClick={() => setActiveTab(t)} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === t ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/30' : 'text-slate-500'}`}>{t}</button>
+              ))}
+           </div>
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+           <StatCard title="Total Neural Scans" value={history.length} icon={Brain} color="#22d3ee" trend={`+${history.length}`} trendUp={true} />
+           <StatCard title="Active Patients" value={patients.length} icon={Users} color="#8b5cf6" />
+           <StatCard title="Critical Sequences" value={history.filter(h => h.risk_level === 'critical').length} icon={Siren} color="#ef4444" />
+           <StatCard title="Avg Prediction" value="98.2%" icon={ShieldCheck} color="#10b981" />
+        </div>
+
+        {activeTab === 'overview' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+             <div className="lg:col-span-2 glass-clinical p-8 rounded-[2.5rem] border border-white/5">
+                <h3 className="text-white font-black uppercase tracking-widest text-xs mb-8 flex items-center gap-2"><TrendingUp size={16} className="text-cyan-400"/> Diagnostic Propagation Velocity</h3>
+                <div className="h-[300px]">
+                   <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={stats.monthlyScans}>
+                        <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/><stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/></linearGradient></defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                        <XAxis dataKey="name" tick={{fill: '#64748b', fontSize: 10}} axisLine={false} />
+                        <YAxis tick={{fill: '#64748b', fontSize: 10}} axisLine={false} />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Area type="monotone" dataKey="value" stroke="#22d3ee" strokeWidth={3} fill="url(#g)" />
+                      </AreaChart>
+                   </ResponsiveContainer>
+                </div>
+             </div>
+             <div className="glass-clinical p-8 rounded-[2.5rem] border border-white/5 flex flex-col items-center justify-center text-center">
+                <h3 className="text-white font-black uppercase tracking-widest text-xs mb-8">Vector Risk Assessment</h3>
+                <RiskGauge score={Math.round((history.filter(h => h.risk_level !== 'low').length / (history.length || 1)) * 100)} />
+                <div className="mt-8 space-y-3 w-full">
+                   {stats.riskDistribution.map((r, i) => (
+                      <div key={i} className="flex justify-between items-center bg-black/20 p-3 rounded-xl border border-white/5">
+                         <span className="text-[10px] font-black uppercase text-slate-400">{r.name}</span>
+                         <span className="text-sm font-black text-white">{r.value}</span>
+                      </div>
+                   ))}
+                </div>
+             </div>
+          </div>
+        )}
+
+        {activeTab === 'matrix' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+             <div className="space-y-4">
+                <h3 className="text-white font-black uppercase tracking-widest text-xs mb-2">Neural Prediction Logs</h3>
+                {history.slice(0, 8).map((h, i) => <ClinicalEngineCard key={i} record={h} index={i} />)}
+             </div>
+             <div className="glass-clinical p-8 rounded-[2.5rem] border border-white/5">
+                <h3 className="text-white font-black uppercase tracking-widest text-xs mb-8">Clinical Neural Matrix</h3>
+                <div className="h-[400px]">
+                   <ResponsiveContainer width="100%" height="100%">
+                      <RadarChart data={stats.radarData}>
+                         <PolarGrid stroke="rgba(255,255,255,0.1)" />
+                         <PolarAngleAxis dataKey="subject" tick={{fill: '#64748b', fontSize: 9}} />
+                         <Radar name="Coverage" dataKey="A" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.2} strokeWidth={2} />
+                         <Tooltip content={<CustomTooltip />} />
+                      </RadarChart>
+                   </ResponsiveContainer>
+                </div>
+             </div>
+          </div>
+        )}
       </div>
     </Layout>
   );

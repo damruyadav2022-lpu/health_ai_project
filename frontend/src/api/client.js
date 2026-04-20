@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = '/api';
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -43,7 +43,7 @@ export const predictAPI = {
 
 // ─── History ────────────────────────────────────────────
 export const historyAPI = {
-  list: (page = 1, limit = 10) => api.get(`/history?page=${page}&limit=${limit}`),
+  list: (page = 1, limit = 10, all_users = true) => api.get(`/history?page=${page}&limit=${limit}&all_users=${all_users}`),
 };
 
 // ─── Recommendations ────────────────────────────────────
@@ -53,7 +53,7 @@ export const recommendAPI = {
 
 // ─── Patients ───────────────────────────────────────────
 export const patientsAPI = {
-  list: () => api.get('/patients'),
+  list: (all_users = true) => api.get(`/patients?all_users=${all_users}`),
   get: (id) => api.get(`/patients/${id}`),
   create: (data) => api.post('/patients', data),
   update: (id, data) => api.put(`/patients/${id}`, data),

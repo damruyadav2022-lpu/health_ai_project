@@ -51,38 +51,46 @@ export default function Sidebar({ collapsed, setCollapsed, navItems = [], childr
         </div>
       </div>
 
-      <div className="p-4 border-t border-white/5 space-y-4">
-        {/* Role Switcher for Demo */}
+      <div className="p-4 border-t border-white/5 space-y-4 bg-black/20">
+        {/* Project Role Switcher (Matching Screenshot) */}
         {!collapsed && (
-          <div className="grid grid-cols-3 gap-1 p-1 bg-white/[0.02] rounded-xl border border-white/5">
-             {['admin', 'doctor', 'patient'].map(r => (
-                <button key={r} onClick={() => switchRole(r)}
-                  className={`py-1 text-[8px] font-black uppercase rounded-lg transition-all
-                  ${user?.role === r ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}>
-                  {r[0]}
+          <div className="flex items-center justify-between gap-1 p-1.5 bg-white/[0.03] rounded-2xl border border-white/5 shadow-inner">
+             {[
+               {id: 'admin', display: 'A'},
+               {id: 'doctor', display: 'D'},
+               {id: 'patient', display: 'P'}
+             ].map(r => (
+                <button key={r.id} onClick={() => switchRole(r.id)}
+                  className={`flex-1 h-10 flex items-center justify-center text-[11px] font-black uppercase rounded-xl transition-all duration-300
+                  ${user?.role === r.id 
+                    ? 'bg-brand-500 text-white shadow-[0_0_20px_rgba(14,165,233,0.4)] scale-105' 
+                    : 'text-slate-600 hover:text-slate-400'}`}>
+                  {r.display}
                 </button>
              ))}
           </div>
         )}
 
-        <div className={`flex items-center gap-3 p-3 rounded-2xl bg-white/[0.02] border border-white/5 ${collapsed ? 'justify-center' : ''}`}>
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-white font-black text-sm shadow-inner shrink-0">
-            {user?.full_name?.charAt(0)}
-          </div>
-          {!collapsed && (
-            <div className="flex-1 min-w-0">
-               <p className="text-[11px] font-bold text-white truncate uppercase tracking-tighter">{user?.full_name}</p>
-               <div className="flex items-center gap-1.5">
-                  <div className={`w-1.5 h-1.5 rounded-full ${user?.role === 'admin' ? 'bg-red-500' : user?.role === 'doctor' ? 'bg-blue-500' : 'bg-emerald-500'}`} />
-                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{user?.role}</p>
-               </div>
-            </div>
-          )}
-          {!collapsed && (
-            <button onClick={() => window.location.reload()} className="p-2 text-slate-500 hover:text-red-400 transition-colors">
-              <LogOut size={14} />
-            </button>
-          )}
+        <div className={`p-4 rounded-3xl bg-white/[0.03] border border-white/5 relative group transition-all duration-300 hover:bg-white/[0.05] ${collapsed ? 'p-2 mt-4' : ''}`}>
+           <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-slate-800 border border-white/10 flex items-center justify-center text-white font-black text-sm shadow-inner group-hover:scale-105 transition-transform">
+                {user?.full_name?.charAt(0)}
+              </div>
+              {!collapsed && (
+                <div className="flex-1 min-w-0">
+                   <p className="text-xs font-black text-white truncate uppercase tracking-tight mb-0.5">{user?.full_name}</p>
+                   <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full animate-pulse ${user?.role === 'admin' ? 'bg-indigo-500' : user?.role === 'doctor' ? 'bg-brand-500' : 'bg-emerald-500'}`} />
+                      <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">{user?.role}</p>
+                   </div>
+                </div>
+              )}
+              {!collapsed && (
+                <button onClick={() => window.location.reload()} className="p-2 text-slate-600 hover:text-red-400 transition-colors">
+                  <LogOut size={16} />
+                </button>
+              )}
+           </div>
         </div>
       </div>
 

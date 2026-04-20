@@ -3,14 +3,16 @@ import { motion } from 'framer-motion';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import ChatBot from './ChatBot';
-import { LayoutDashboard, Activity, Users, Settings, LogOut, Brain, Search, BookOpen, MessageSquare, ClipboardList, TrendingUp } from 'lucide-react';
+import { LayoutDashboard, Activity, Users, Brain, BookOpen, ClipboardList, BarChart2, Video, Stethoscope } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const navItems = [
   { path: '/dashboard', label: 'Clinical Dashboard', icon: LayoutDashboard },
+  { path: '/doctors', label: 'Specialist Hub', icon: Stethoscope },
   { path: '/predict', label: 'AI Predict', icon: Brain },
   { path: '/scribe', label: 'Medical Scribe', icon: ClipboardList },
-  { path: '/analytics', label: 'MedExam Pro', icon: TrendingUp },
+  { path: '/telemed', label: 'Virtual Telemed', icon: Video },
+  { path: '/analytics', label: 'Clinical Analytics', icon: BarChart2 },
   { path: '/patients', label: 'Patient Records', icon: Users },
   { path: '/explorer', label: 'Disease Intelligence', icon: BookOpen },
 ];
@@ -19,13 +21,18 @@ export default function Layout({ children, title }) {
   const [collapsed, setCollapsed] = useState(false);
   const { user, ROLES } = useAuth();
 
+  const ROLE_PERMISSIONS = {
+    [ROLES.ADMIN]: ['/dashboard', '/doctors', '/predict', '/scribe', '/telemed', '/analytics', '/patients', '/explorer'],
+    [ROLES.DOCTOR]: ['/dashboard', '/doctors', '/predict', '/scribe', '/telemed', '/patients', '/analytics'],
+    [ROLES.PATIENT]: ['/dashboard', '/doctors', '/telemed', '/explorer']
+  };
+
   const filteredNav = navItems.filter(item => {
     if (!user) return false;
-    if (user.role === ROLES.PATIENT) {
-      return ['/dashboard', '/reports', '/explorer'].includes(item.path);
-    }
-    return true; // Doctors/Admins see all
+    const allowedPaths = ROLE_PERMISSIONS[user.role] || [];
+    return allowedPaths.includes(item.path);
   });
+
 
   return (
     <div className="flex h-screen overflow-hidden mesh-gradient-nexus font-inter bg-dark-900">
@@ -36,7 +43,7 @@ export default function Layout({ children, title }) {
           </div>
           {!collapsed && (
             <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-              <h1 className="text-2xl font-black text-white tracking-tighter uppercase leading-none">Nexus</h1>
+              <h1 className="text-2xl font-black text-white tracking-tighter uppercase leading-none">Dr.AI</h1>
               <div className="flex items-center gap-1 mt-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">Intelligence</span>

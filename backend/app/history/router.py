@@ -13,15 +13,19 @@ router = APIRouter()
 @router.get("/history")
 def get_history(
     page: int = Query(1, ge=1),
-    limit: int = Query(10, ge=1, le=100),
+    limit: int = Query(10, ge=1, le=2000),
+    all_users: bool = Query(False),
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
     try:
-        total = db.query(PredictionHistory).filter(PredictionHistory.user_id == current_user.id).count()
+        query = db.query(PredictionHistory)
+        if not all_users:
+            query = query.filter(PredictionHistory.user_id == current_user.id)
+            
+        total = query.count()
         records = (
-            db.query(PredictionHistory)
-            .filter(PredictionHistory.user_id == current_user.id)
+            query
             .order_by(PredictionHistory.created_at.desc())
             .offset((page - 1) * limit)
             .limit(limit)

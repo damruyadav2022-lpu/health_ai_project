@@ -2,8 +2,11 @@ from sqlalchemy.orm import Session
 from app.patients.models import Patient
 from app.patients.schemas import PatientCreate, PatientUpdate
 
-def get_patients(db: Session, user_id: int):
-    return db.query(Patient).filter(Patient.user_id == user_id).all()
+def get_patients(db: Session, user_id: int = None):
+    query = db.query(Patient)
+    if user_id is not None:
+        query = query.filter(Patient.user_id == user_id)
+    return query.all()
 
 def get_patient(db: Session, patient_id: int, user_id: int):
     return db.query(Patient).filter(Patient.id == patient_id, Patient.user_id == user_id).first()

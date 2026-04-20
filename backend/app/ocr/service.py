@@ -52,31 +52,54 @@ def preprocess_image(image_bytes: bytes, fast_mode: bool = True):
     return binary
 
 
+import hashlib
+import functools
+
+@functools.lru_cache(maxsize=100)
+def _get_cached_text(file_hash: str) -> str:
+    """Internal LRU cache for OCR results based on file hash."""
+    return None # Placeholder, will be managed by extract_text
+
+# Global cache for OCR results (in-memory for "fast" dev)
+OCR_CACHE = {}
+
 def extract_text(file_bytes: bytes, filename: str = "") -> str:
-    """Run Tesseract OCR or direct text extraction based on file type."""
+    """Run Tesseract OCR or direct text extraction based on file type with local caching."""
     if not OCR_AVAILABLE:
         return "DEMO MODE: Glucose 126 mg/dL, Blood Pressure 140/90, HbA1c 6.5%"
 
+    # 1. Check Cache (Fast Path)
+    file_hash = hashlib.md5(file_bytes).hexdigest()
+    if file_hash in OCR_CACHE:
+        return OCR_CACHE[file_hash]
+
     ext = filename.lower().split('.')[-1] if filename else ""
+    text = ""
     
     try:
         if ext == 'pdf' or (not ext and file_bytes.startswith(b'%PDF')):
-            return extract_from_pdf(file_bytes)
+            text = extract_from_pdf(file_bytes)
         elif ext in ['docx', 'doc']:
-            return extract_from_docx(file_bytes)
+            text = extract_from_docx(file_bytes)
         else:
             # Default to image OCR (Fast mode enabled by default)
             processed = preprocess_image(file_bytes, fast_mode=True)
             if processed is None:
-                # Fallback to PIL if OpenCV fails to decode
                 img = Image.open(io.BytesIO(file_bytes))
             else:
                 img = Image.fromarray(processed)
             
-            return pytesseract.image_to_string(img, config="--psm 6").strip()
+            text = pytesseract.image_to_string(img, config="--psm 6").strip()
+            
+        # Update Cache
+        if text:
+            OCR_CACHE[file_hash] = text
+            
+        return text
     except Exception as e:
         print(f"Extraction error: {e}")
         return "DEMO MODE: Glucose 126 mg/dL, Blood Pressure 140/90, HbA1c 6.5%"
+
 
 
 def _ocr_single_page(img):
@@ -128,23 +151,38 @@ def extract_from_docx(docx_bytes: bytes) -> str:
 # ─── Improved health metric extraction ───────────────────────────────────────
 
 FIELD_PATTERNS = {
+    # Endocrine & Vitals
     "Glucose": r"(?:glucose|fbs|fasting\s+sugar|ppbs|sugar\s+level|post\s+prandial)[^\d]*(\d+\.?\d*)",
-    "HbA1c": r"(?:hba1c|haemoglobin\s+a1c|glycosylated\s+hemoglobin)[^\d]*(\d+\.?\d*)",
+    "Insulin": r"(?:insulin|serum\s+insulin)[^\d]*(\d+\.?\d*)",
     "BMI": r"(?:bmi|body\s+mass\s+index)[^\d]*(\d+\.?\d*)",
-    "BloodPressure": r"(?:blood\s+pressure|bp|systolic/diastolic)\s*:?\s*(\d+)\s*[/|]\s*(\d+)",
-    "Cholesterol": r"(?:total\s+)?cholesterol[^\d]*(\d+\.?\d*)",
-    "LDL": r"(?:ldl|low\s+density\s+lipoprotein|bad\s+cholesterol)[^\d]*(\d+\.?\d*)",
-    "HDL": r"(?:hdl|high\s+density\s+lipoprotein|good\s+cholesterol)[^\d]*(\d+\.?\d*)",
-    "Triglycerides": r"(?:triglycerides|tg)[^\d]*(\d+\.?\d*)",
+    "SkinThickness": r"(?:skin\s+thickness|skinfold)[^\d]*(\d+\.?\d*)",
+    "Pregnancies": r"(?:pregnancies|gravida)[^\d]*(\d+)",
+    "DiabetesPedigreeFunction": r"(?:pedigree\s+function|dpf)[^\d]*(\d+\.?\d*)",
+    "Age": r"(?:age|years)[^\d]*(\d+)",
+    
+    # Cardiovascular
+    "BloodPressure": r"\b(?:bp|blood\s+pressure)\b\s*:?\s*(\d+)\s*[/|]\s*(\d+)",
+    "trestbps": r"(?:resting\s+bp|trestbps|systolic)[^\d]*(\d+)",
+    "thalach": r"(?:heart\s+rate|hr|pulse|thalach)[^\d]*(\d+)",
+    "chol": r"(?:cholesterol|chol|total\s+chol)[^\d]*(\d+\.?\d*)",
+    "oldpeak": r"(?:st\s+depression|oldpeak)[^\d]*(\d+\.?\d*)",
+    
+    # Hepatic (Liver Function Test)
+    "Total_Bilirubin": r"(?:total\s+bilirubin|tb|t\.?\s*bil)[^\d]*(\d+\.?\d*)",
+    "Direct_Bilirubin": r"(?:direct\s+bilirubin|db|d\.?\s*bil)[^\d]*(\d+\.?\d*)",
+    "Alkaline_Phosphotase": r"(?:alkaline\s+phosphatase|alp|alk\s+phos)[^\d]*(\d+\.?\d*)",
+    "Alamine_Aminotransferase": r"(?:alt|sgpt|alamine\s+aminotransferase)[^\d]*(\d+)",
+    "Aspartate_Aminotransferase": r"(?:ast|sgot|aspartate\s+aminotransferase)[^\d]*(\d+)",
+    "Total_Protiens": r"(?:total\s+protein|tp|protein)[^\d]*(\d+\.?\d*)",
+    "Albumin": r"(?:albumin|alb)[^\d]*(\d+\.?\d*)",
+    "Albumin_and_Globulin_Ratio": r"(?:a/g\s+ratio|albumin/globulin|agr)[^\d]*(\d+\.?\d*)",
+
+    # General CBC / Metabolic (Auxiliary fallback)
     "Platelet": r"(?:platelet|plt|thrombocyte|platelet\s+count)[^\d]*(\d+)",
     "Hemoglobin": r"(?:hemoglobin|hb|hgb)[^\d]*(\d+\.?\d*)",
     "WBC": r"(?:wbc|white\s+blood\s+cell|total\s+leucocyte\s+count|tlc)[^\d]*(\d+\.?\d*)",
-    "Bilirubin": r"(?:total\s+)?bilirubin[^\d]*(\d+\.?\d*)",
     "Creatinine": r"(?:serum\s+)?creatinine[^\d]*(\d+\.?\d*)",
-    "ALT": r"(?:alt|sgpt|alanine\s+aminotransferase)[^\d]*(\d+)",
-    "AST": r"(?:ast|sgot|aspartate\s+aminotransferase)[^\d]*(\d+)",
     "SpO2": r"(?:spo2|oxygen\s+saturation|saturation)[^\d]*(\d+)",
-    "Age": r"(?:age|years)[^\d]*(\d+)",
 }
 
 
